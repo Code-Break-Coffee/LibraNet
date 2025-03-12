@@ -1,0 +1,19 @@
+{
+    "vendor-name": "TanishqMehrunkarIIPSDAVV/LibraNet",
+    "description": "Library Management System",
+    "authors": [
+        {
+            "name": "Tanishq Mehrunkar",
+            "email": "mehrunkart@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Framework\\": "Framework/",
+            "App\\": "App/"
+        }
+    },
+    "require": {
+        "vlucas/phpdotenv": "^5.6"
+    }
+}
