@@ -1,10 +1,10 @@
 {
-    "vendor-name": "TanishqMehrunkarIIPSDAVV/LibraNet",
+    "vendor-name": "zakie2003/LibraNet",
     "description": "Library Management System",
     "authors": [
         {
-            "name": "Tanishq Mehrunkar",
-            "email": "mehrunkart@gmail.com"
+            "name": "zakie khan",
+            "email": "zk.khan2003@gmail.com"
         }
     ],
     "autoload": {

@@ -6,15 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do Website</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {},
-            },
-            plugins: [],
-        };
-    </script>
+    <?=loadComponent("Tailwind")?>
     <link rel="stylesheet" href="/css/style.css">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
