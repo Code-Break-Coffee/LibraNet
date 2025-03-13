@@ -12,4 +12,14 @@ class HomeController
     {
         load("Home");
     }
+
+    /**
+     * Show the admin dashboard
+     * @return void
+     */
+    public function adminDashboard()
+    {
+        load("AdminDashBoard");
+    }
+
 }

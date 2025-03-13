@@ -1,6 +1,6 @@
-<?php
-
+<?=
 loadComponent("Head");
+loadComponent("ThemeToggle");
 ?>
 <div class="flex min-h-screen items-center justify-center bg-l-1 dark:bg-[#090A0C]">
   <div class="w-full max-w-md rounded-2xl bg-l-2 p-8 shadow-lg border border-[#E0F2FE] dark:bg-[#101623] dark:border-d-2">
@@ -17,7 +17,7 @@ loadComponent("Head");
           class="w-full rounded-lg border border-l-b-1 p-3 focus:border-l-b-1 focus:outline-none focus:ring-1 focus:ring-l-b-1 dark:border-d-2 dark:bg-l-6 dark:text-d-1 bg-l-5"
           placeholder="Enter your email" />
       </div>
-      <div class="mb-4">
+      <div class="mb-4 relative">
         <label class="mb-2 block text-sm font-medium text-l-3 dark:text-d-3">
           Password
         </label>
@@ -25,6 +25,7 @@ loadComponent("Head");
           type="password"
           class="w-full rounded-lg border border-l-b-1 p-3 focus:border-l-b-1 focus:outline-none focus:ring-1 focus:ring-l-b-1 dark:border-d-2 dark:bg-l-6 dark:text-d-1 bg-l-5"
           placeholder="Enter your password" />
+        <?=loadComponent("EyeIcons") ?>
       </div>
       <button
         type="submit"
@@ -33,15 +34,11 @@ loadComponent("Head");
       </button>
     </form>
     <p class="mt-4 text-center text-sm text-black dark:text-d-3">
-      Forgot password? <a href="#" class="text-black dark:text-d-3">Reset here</a>
+      No Account? <a href="/signup" class="text-black dark:text-d-3">Sign up</a>
+    </p>
+    <p class="mt-4 text-center text-sm text-black dark:text-d-3">
+      Forgot password? <a href="/forgot-password" class="text-black dark:text-d-3">Reset here</a>
     </p>
   </div>
 </div>
-<div class="absolute top-3 left-4">
-    <?=
-      loadComponent("ThemeToggle");
-    ?>
-</div>
-<?=
-loadComponent("Tail");
-?>
+<?=loadComponent("Tail")?>
