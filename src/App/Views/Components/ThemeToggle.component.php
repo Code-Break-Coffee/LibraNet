@@ -1,6 +1,6 @@
 <!-- <button id="theme-toggle" class="poppins-bold absolute top-5 left-5 p-2 bg-[#124E66] dark:bg-[#748D92] text-white dark:text-black rounded-lg shadow-md dark:shadow-lg hover:bg-[#0E3C50] dark:hover:bg-[#D3D9D4] transition-all font-semibold">Toggle Theme</button> -->
 
-<div class="absolute top-0 left-5">
+
     <label id="theme-toggle-button">
         <input type="checkbox" id="theme-toggle">
         <svg viewBox="0 0 69.667 44" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
@@ -57,4 +57,3 @@
             </g>
         </svg>
     </label>
-</div>
