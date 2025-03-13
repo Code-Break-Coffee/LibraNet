@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use Framework\Database;
 class UserController
 {
     protected $db;
@@ -12,7 +13,8 @@ class UserController
      */
     public function __construct()
     {
-        
+        $config = require_once basePath("config/db.php");
+        $this->db = new Database($config);
     }
 
     /**

@@ -10,6 +10,7 @@ class HomeController
      */
     public function index()
     {
+        // EmailController::sendEmail("zk.khan2003@gmail.com","Test Email","This is a test email","<h1>This is a test email</h1>");
         load("Home");
     }
 
