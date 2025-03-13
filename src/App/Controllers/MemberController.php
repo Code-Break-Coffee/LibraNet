@@ -3,7 +3,8 @@
 namespace App\Controllers;
 
 use Framework\Database;
-class UserController
+
+class MemberController
 {
     protected $db;
 
@@ -23,7 +24,7 @@ class UserController
      */
     public function index()
     {
-        load("User/Signin.user");
+        load("Member/Signin.member");
     }
 
     /**
@@ -32,7 +33,7 @@ class UserController
      */
     public function forgotPassword()
     {
-        load("User/ForgotPassword.user");
+        load("Member/ForgotPassword.member");
     }
 
     /**
@@ -41,6 +42,6 @@ class UserController
      */
     public function signup()
     {
-        load("User/Signup.user");
+        load("Member/Signup.member");
     }
 }
