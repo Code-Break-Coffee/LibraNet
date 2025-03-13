@@ -37,6 +37,11 @@ loadComponent("Head");
     </p>
   </div>
 </div>
+<div class="absolute top-3 left-4">
+    <?=
+      loadComponent("ThemeToggle");
+    ?>
+</div>
 <?=
-loadComponent("ThemeToggle");
 loadComponent("Tail");
+?>
