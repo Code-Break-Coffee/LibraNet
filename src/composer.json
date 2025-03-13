@@ -1,10 +1,19 @@
 {
-    "vendor-name": "zakie2003/LibraNet",
+    "vendor-name": "Code-Break-Coffee/LibraNet",
     "description": "Library Management System",
     "authors": [
         {
             "name": "zakie khan",
             "email": "zk.khan2003@gmail.com"
+        }
+        ,
+        {
+            "name": "Kartikey Yadav",
+            "email": "kartikey.yadav1120@gmail.com"
+        },
+        {
+            "name": "Tanishq Mehrunkar",
+            "email": "mehrunkart@gmail.com"
         }
     ],
     "autoload": {
