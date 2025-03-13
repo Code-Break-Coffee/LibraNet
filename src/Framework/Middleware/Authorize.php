@@ -12,7 +12,7 @@ class Authorize
      */
     function isAuthenticated()
     {
-        return Session::check("user");
+        return Session::check("incharge");
     }
 
     /**
@@ -22,13 +22,13 @@ class Authorize
      */
     function handle($role)
     {
-        if($role === "guest" && $this->isAuthenticated())
+        if($role === "guest-incharge" && $this->isAuthenticated())
         {
-            return redirect("/home");
+            return redirect("/incharge-dashboard");
         }
-        else if($role === "auth" && !$this->isAuthenticated())
+        else if($role === "auth-incharge" && !$this->isAuthenticated())
         {
-            return redirect("/");
+            return redirect("/incharge-signin");
         }
     }
 }

@@ -17,11 +17,11 @@
             </header>
             <main class="container mx-auto px-4 py-8">
                 <h1 class="text-2xl font-semibold text-l-3 dark:text-d-3 mb-6">Dashboard</h1>
-                <?= loadComponent("AdminDashBoard/Stats"); ?>
+                <?= loadComponent("InchargeDashBoard/Stats"); ?>
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <?php
-                        loadComponent("AdminDashBoard/Transaction");
-                        loadComponent("AdminDashBoard/PopularBook");
+                        loadComponent("InchargeDashBoard/Transaction");
+                        loadComponent("InchargeDashBoard/PopularBook");
                     ?>
                 </div>
             </main>

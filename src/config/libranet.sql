@@ -3,8 +3,8 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 13, 2025 at 11:49 AM
--- Server version: 8.0.32
+-- Generation Time: Mar 13, 2025 at 05:12 PM
+-- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
@@ -49,13 +49,22 @@ CREATE TABLE `book_master` (
 
 CREATE TABLE `incharge` (
   `Id` int NOT NULL,
-  `FName` int NOT NULL,
-  `MName` int DEFAULT NULL,
-  `LName` int NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `FName` varchar(50) NOT NULL,
+  `MName` varchar(50) DEFAULT NULL,
+  `LName` varchar(50) NOT NULL,
   `PhoneNo` varchar(11) NOT NULL,
   `Designation` varchar(20) NOT NULL,
   `Remark` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `incharge`
+--
+
+INSERT INTO `incharge` (`Id`, `email`, `password`, `FName`, `MName`, `LName`, `PhoneNo`, `Designation`, `Remark`) VALUES
+(1, 'mehrunkart@gmail.com', '$2y$10$n8tn2O6W1QbspKqhqz5SDeicvX9XNhtRyyD2ruFqsP.mFYOlpF.sG', 'Tanishq', NULL, 'Mehrunkar', '7024888951', 'Incharge-Head', NULL);
 
 -- --------------------------------------------------------
 
@@ -115,6 +124,19 @@ CREATE TABLE `transactions` (
   `Status` varchar(10) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `unverified`
+--
+
+CREATE TABLE `unverified` (
+  `id` int NOT NULL,
+  `email` varchar(255) COLLATE utf8mb3_bin NOT NULL,
+  `user_type` varchar(50) COLLATE utf8mb3_bin NOT NULL,
+  `code` varchar(255) COLLATE utf8mb3_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3 COLLATE=utf8mb3_bin;
+
 --
 -- Indexes for dumped tables
 --
@@ -161,6 +183,12 @@ ALTER TABLE `transactions`
   ADD KEY `LibrarianId` (`LibrarianId`);
 
 --
+-- Indexes for table `unverified`
+--
+ALTER TABLE `unverified`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -187,6 +215,12 @@ ALTER TABLE `member_auth`
 --
 ALTER TABLE `transactions`
   MODIFY `Id` int NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `unverified`
+--
+ALTER TABLE `unverified`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
 -- Constraints for dumped tables

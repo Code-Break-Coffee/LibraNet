@@ -48,12 +48,12 @@ loadComponent("ThemeToggle", ["classes" => "absolute top-3 left-4"]);
       </div>
       <button
         type="submit"
-        class="w-full rounded-lg bg-l-3 p-3 text-l-7 hover:bg-[#722F37] dark:bg-d-3 dark:hover:bg-l-7 dark:text-[#262424] dark:shadow-lg dark:shadow-d-2/30">
+        class=" mt-4 w-full rounded-lg bg-l-3 p-3 text-l-7 hover:bg-[#722F37] dark:bg-d-3 dark:hover:bg-l-7 dark:text-[#262424] dark:shadow-lg dark:shadow-d-2/30">
         Sign Up
       </button>
     </form>
     <p class="mt-4 text-center text-sm text-black dark:text-d-3">
-      Already Have Account? <a href="/signin" class="text-black dark:text-d-3">Sign in</a>
+      Already Have Account? <a href="/" class="text-black dark:text-d-3">Sign in</a>
     </p>
   </div>
 </div>
