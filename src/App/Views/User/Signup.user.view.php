@@ -1,6 +1,6 @@
 <?=
 loadComponent("Head");
-loadComponent("ThemeToggle");
+loadComponent("ThemeToggle", ["classes" => "absolute top-3 left-4"]);
 ?>
 <div class="flex min-h-screen items-center justify-center bg-l-1 dark:bg-[#090A0C]">
   <div class="w-full max-w-md rounded-2xl bg-l-2 p-8 shadow-lg border border-[#E0F2FE] dark:bg-[#101623] dark:border-d-2">

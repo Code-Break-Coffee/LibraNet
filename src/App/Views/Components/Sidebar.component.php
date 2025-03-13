@@ -41,8 +41,6 @@
                 </a>
             </div>
             <div class="flex flex-col items-center mt-2 border-t border-black">
-                <div class="absolute bottom-1 left-0 w-full flex justify-center items-center">
-                    <?php loadComponent("ThemeToggle"); ?>
-                </div>
+                <?php loadComponent("ThemeToggle",["classes"=>"absolute bottom-1 left-0 w-full flex justify-center items-center"]); ?>
             </div>
         </div>

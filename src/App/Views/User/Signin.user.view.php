@@ -1,7 +1,8 @@
 <?=
 loadComponent("Head");
-loadComponent("ThemeToggle");
+loadComponent("ThemeToggle", ["classes" => "absolute top-3 left-4"]);
 ?>
+</div>
 <div class="flex min-h-screen items-center justify-center bg-l-1 dark:bg-[#090A0C]">
   <div class="w-full max-w-md rounded-2xl bg-l-2 p-8 shadow-lg border border-[#E0F2FE] dark:bg-[#101623] dark:border-d-2">
     <h2 class="mb-6 text-center text-2xl font-bold text-l-3 dark:text-d-3">
@@ -25,7 +26,7 @@ loadComponent("ThemeToggle");
           type="password"
           class="w-full rounded-lg border border-l-b-1 p-3 focus:border-l-b-1 focus:outline-none focus:ring-1 focus:ring-l-b-1 dark:border-d-2 dark:bg-l-6 dark:text-d-1 bg-l-5"
           placeholder="Enter your password" />
-        <?=loadComponent("EyeIcons") ?>
+        <?= loadComponent("EyeIcons") ?>
       </div>
       <button
         type="submit"
@@ -41,4 +42,4 @@ loadComponent("ThemeToggle");
     </p>
   </div>
 </div>
-<?=loadComponent("Tail")?>
+<?= loadComponent("Tail") ?>
