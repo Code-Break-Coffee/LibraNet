@@ -10,9 +10,9 @@ class Authorize
      * Check if user is authenticated
      * @return bool
      */
-    function isAuthenticated()
+    function isAuthenticated($user)
     {
-        return Session::check("incharge");
+        return Session::check($user);
     }
 
     /**
@@ -22,13 +22,21 @@ class Authorize
      */
     function handle($role)
     {
-        if($role === "guest-incharge" && $this->isAuthenticated())
+        if($role === "guest-incharge" && $this->isAuthenticated("incharge"))
         {
             return redirect("/incharge-dashboard");
         }
-        else if($role === "auth-incharge" && !$this->isAuthenticated())
+        else if($role === "auth-incharge" && !$this->isAuthenticated("incharge"))
         {
             return redirect("/incharge-signin");
+        }
+        else if($role === "guest-member" && $this->isAuthenticated("member"))
+        {
+            return redirect("/member-dashboard");
+        }
+        else if($role === "auth-member" && !$this->isAuthenticated("member"))
+        {
+            return redirect("/");
         }
     }
 }
