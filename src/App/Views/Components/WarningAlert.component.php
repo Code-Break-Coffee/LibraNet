@@ -1,4 +1,7 @@
 <div class="space-y-2 p-4">
+    <?php
+        foreach ($warnings as $warning) {
+    ?>
     <div
         role="alert"
         class="bg-yellow-100 dark:bg-yellow-900 border-l-4 border-yellow-500 dark:border-yellow-700 text-yellow-900 dark:text-yellow-100 p-2 rounded-lg flex items-center transition duration-300 ease-in-out hover:bg-yellow-200 dark:hover:bg-yellow-800 transform hover:scale-105">
@@ -15,7 +18,10 @@
                 stroke-linecap="round"></path>
         </svg>
         <p class="text-xs font-semibold">
-            <?=$msg ?? 'Warning - Something went wrong.' ?>
+            <?=$warning ?? '' ?>
         </p>
     </div>
+    <?php
+    }
+    ?>
 </div>

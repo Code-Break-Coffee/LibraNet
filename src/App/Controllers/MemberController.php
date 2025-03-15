@@ -114,6 +114,7 @@ class MemberController
             $password= $_POST["password"];
             $confirm_password= $_POST["confirm_password"];
             $errors = [];
+            $warning = [];
             if(!Validation::email($email))
             {
                 $errors["email"] = "Invalid Email !!!";
@@ -122,23 +123,29 @@ class MemberController
             {
                 $errors["password"] = "Password and Confirm Password should be same !!!";
             }
+            if(!Validation::string($password,8,50)){
+                $errors["password"] = "Password length should be between 8 to 50 characters !!!";
+            }
+            if(!Validation::string($address,0,60))
+            {
+                $errors["address"] = "Invalid Address !!!";
+            }
             if(!Validation::phone($phone))
             {
                 $errors["phone"] = "Invalid Phone Number !!!";
             }
             if(!Validation::string($first_name,1,15))
             {
-                $errors["first_name"] = "Invalid First Name !!!";
-            }
-            if(!Validation::string($middle_name,1,15))
-            {
-                $errors["middle_name"] = "Invalid Middle Name !!!";
+                $errors["first_name"] = "First Name should be at atmost 15 length!!!";
             }
             if(!Validation::string($last_name,1,15))
             {
-                $errors["last_name"] = "Invalid Last Name !!!";
+                $errors["last_name"] = "Last Name should be at atmost 15 length!!!";
             }
-
+            if(!Validation::string($middle_name,0,15))
+            {
+                $errors["middle_name"] = "Middle Name should be atmost 15 length!!!";
+            }
             $memeber_exists = $this->db->query("select * from member where Email=:email",["email"=>$email])->fetch();
             if($memeber_exists)
             {
@@ -152,18 +159,20 @@ class MemberController
                 $user_exists = $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
                 if($user_exists)
                 {
-                    $this->db->query("update unverified set code=:code where email=:email",["code"=>$otp,"email"=>$email]);
+                    $this->db->query("update unverified set code=:code where email=:email",["code"=>password_hash($otp,PASSWORD_BCRYPT),"email"=>$email]);
                 }
                 else
                 {
-                    $this->db->query("insert into unverified(email,user_type,code) values(:email,:user_type,:code)",["email"=>$email,"user_type"=>"member","code"=>$otp]);
+                    $this->db->query("insert into unverified(email,user_type,code) values(:email,:user_type,:code)",["email"=>$email,"user_type"=>"member","code"=>password_hash($otp,PASSWORD_BCRYPT)]);
                 }
-                $errors["otp_message"]="Enter the OTP";
+                $warning["otp_message"]="Enter the OTP";
+                inspect($show_otp_input);
+                EmailController::sendEmail($email,"Verification Email","OTP Verification","<h1>$otp_message</h1>");
             }
-            load("Member/Signup.member",["data"=>$_POST,"show_otp_input"=>$show_otp_input,"errors"=>$errors]);
+            load("Member/Signup.member",["data"=>$_POST,"show_otp_input"=>$show_otp_input,"errors"=>$errors,"warning"=>$warning]);
             exit;
         }
-
+        inspect($show_otp_input);
         load("Member/Signup.member",["show_otp_input"=>$show_otp_input]);
     }
 
@@ -189,14 +198,15 @@ class MemberController
         $otp= $_POST["otp"];
         $errors = [];
         if(empty($errors)){
-            $user_exists = $this->db->query("select * from unverified where email=:email and code=:code",["email"=>$email,"code"=>$otp])->fetch();
-            
-            if($user_exists && Validation::match($user_exists->code,$otp))
+            $user_exists = $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
+            inspect(($user_exists->code));
+            inspect($otp);
+            inspect(password_verify($user_exists->code,$otp));
+            if($user_exists && password_verify($otp,$user_exists->code))
             {
-                $this->db->query("insert into member(FName,MName,LName,PhoneNo,Email,Password,Address,Affiliation,Remark,Status) values(:first_name,:middle_name,:last_name,:phone,:email,:password,:address,:affilate,:remark,:status)",["email"=>$email,"password"=>password_hash($password,PASSWORD_DEFAULT),"first_name"=>$first_name,"middle_name"=>$middle_name,"last_name"=>$last_name,"phone"=>$phone,"address"=>$address,"affilate"=>"","remark"=>"","status"=>"Active"]);
+                $this->db->query("insert into member(FName,MName,LName,PhoneNo,Email,Password,Address,Affiliation,Remark,Status) values(:first_name,:middle_name,:last_name,:phone,:email,:password,:address,:affilate,:remark,:status)",["email"=>$email,"password"=>password_hash($password,PASSWORD_BCRYPT),"first_name"=>$first_name,"middle_name"=>$middle_name,"last_name"=>$last_name,"phone"=>$phone,"address"=>$address,"affilate"=>"","remark"=>"","status"=>"Active"]);
                 $this->db->query("delete from unverified where email=:email",["email"=>$email]);
-                load("Member/Dashboard.member");
-                exit;
+                redirect("/");
             }
             else
             {

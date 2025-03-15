@@ -5,6 +5,7 @@ loadComponent("ThemeToggle", ["classes" => "absolute top-3 left-4"]);
 <div class="flex min-h-screen items-center justify-center bg-l-1 dark:bg-[#090A0C]">
   <div class="w-full max-w-md rounded-2xl bg-l-2 p-8 shadow-lg border border-[#E0F2FE] dark:bg-[#101623] dark:border-d-2">
     <?=loadComponent("ErrorAlert",["errors" => $errors ?? []]) ?>
+    <?=loadComponent("WarningAlert",["warnings" => $warning ?? []]) ?>
     <h2 class="mb-6 text-center text-2xl font-bold text-l-3 dark:text-d-3">
       Member Sign Up
     </h2>
@@ -58,11 +59,11 @@ loadComponent("ThemeToggle", ["classes" => "absolute top-3 left-4"]);
           Phone number
         </label>
         <input
-          type="number"
+          type="tel"
           class="w-full rounded-lg border border-l-b-1 p-3 focus:border-l-b-1 focus:outline-none focus:ring-1 focus:ring-l-b-1 dark:border-d-2 dark:bg-l-6 dark:text-d-1 bg-l-5"
           placeholder="Enter your phone number" 
           name="phone"
-          value=<?=(isset($data["phone"])? $data["phone"] : "")?>  />
+          value="<?=(isset($data["phone"])? $data["phone"] : "")?>"  />
       </div>
       <div class="mb-4">
         <label class="mb-2 block text-sm font-medium text-l-3 dark:text-d-3">
@@ -109,7 +110,7 @@ loadComponent("ThemeToggle", ["classes" => "absolute top-3 left-4"]);
           name="otp" />
       </div>
       <?php endif; ?>
-      <?php if($show_otp_input===false): ?>
+      <?php if($show_otp_input===true): ?>
         <button
           type="submit"
           class=" mt-4 w-full rounded-lg bg-l-3 p-3 text-l-7 hover:bg-[#722F37] dark:bg-d-3 dark:hover:bg-l-7 dark:text-[#262424] dark:shadow-lg dark:shadow-d-2/30">
