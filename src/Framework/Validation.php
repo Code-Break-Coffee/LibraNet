@@ -49,4 +49,21 @@ class Validation
 
         return $value1 === $value2;
     }
+
+    /**
+     * Validate Phone number
+     *
+     * @param int $value
+     * @param int $min
+     * @param int $max
+     * @return bool
+     */
+    public static function phone($value,$min=1000000000,$max=9999999999)
+    {
+        if(is_numeric($value))
+        {
+            return $value >= $min && $value <= $max;
+        }
+        return false;
+    }
 }
