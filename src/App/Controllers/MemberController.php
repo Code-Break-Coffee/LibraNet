@@ -77,6 +77,18 @@ class MemberController
     }
 
     /**
+     * Sign Out the Member
+     * @return void
+     */
+    public function memberSignout()
+    {
+        Session::destroy();
+        $params = session_get_cookie_params();
+        setcookie("PHPSESSID", "", time() - 86400, $params["path"], $params["domain"]);
+        redirect("/");
+    }
+
+    /**
      * Show the Forgot Password page
      * @return void
      */
