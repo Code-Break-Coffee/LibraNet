@@ -6,6 +6,7 @@ $router->get("/","MemberController@index",["guest-member"]);
 $router->get("/member-forgot-password","MemberController@memberForgotPassword",["guest-member"]);
 $router->get("/member-signup","MemberController@memberSignup",["guest-member"]);
 $router->get("/member-dashboard","MemberController@memberDashboard",["auth-member"]);
+$router->get("/member-signout","MemberController@memberSignout",["auth-member"]);
 
 //----Incharge
 $router->get("/incharge-dashboard","InchargeController@inchargeDashboard",["auth-incharge"]);

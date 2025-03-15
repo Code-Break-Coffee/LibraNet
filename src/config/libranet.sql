@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Mar 13, 2025 at 05:12 PM
+-- Generation Time: Mar 15, 2025 at 06:27 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -90,11 +90,19 @@ CREATE TABLE `member` (
   `LName` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `PhoneNo` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `Email` varchar(30) NOT NULL,
+  `Password` varchar(255) NOT NULL,
   `Address` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
   `Affiliation` varchar(30) DEFAULT NULL,
   `Remark` varchar(30) DEFAULT NULL,
   `Status` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `member`
+--
+
+INSERT INTO `member` (`Id`, `FName`, `MName`, `LName`, `PhoneNo`, `Email`, `Password`, `Address`, `Affiliation`, `Remark`, `Status`) VALUES
+(1, 'Tanishq', NULL, 'Mehrunkar', '7024888951', 'mehrunkart@gmail.com', '$2y$10$n8tn2O6W1QbspKqhqz5SDeicvX9XNhtRyyD2ruFqsP.mFYOlpF.sG', NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -202,7 +210,7 @@ ALTER TABLE `incharge_auth`
 -- AUTO_INCREMENT for table `member`
 --
 ALTER TABLE `member`
-  MODIFY `Id` int NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `member_auth`
