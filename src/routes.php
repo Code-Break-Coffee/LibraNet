@@ -16,6 +16,8 @@ $router->get("/incharge-signin","InchargeController@index",["guest-incharge"]);
 
 //----Member
 $router->post("/member-signin","MemberController@memberSignin",["guest-member"]);
+$router->post("/member-signup","MemberController@memberSignup",["guest-member"]);
+$router->post("/add-member","MemberController@addMember",["guest-member"]);
 
 //----Incharge
 $router->post("/incharge-signin","InchargeController@inchargeSignin",["guest-incharge"]);
