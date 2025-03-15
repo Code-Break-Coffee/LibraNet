@@ -36,7 +36,7 @@ class InchargeController
      */
     public function inchargeDashboard()
     {
-        load("Incharge/InchargeDashBoard");
+        load("Incharge/Dashboard.incharge");
     }
 
     /**
