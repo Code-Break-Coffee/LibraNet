@@ -1,0 +1,23 @@
+Only one can register - incharge or member
+reset password
+
+
+//----------Dashboard
+Transactions-
+    Issue
+    Return
+    History
+Book Manipulation
+    Insert [Many too]
+    Delete
+Incharge
+    Add Incharge
+    Remove Incharge
+    Change Details
+    Member Ban
+Search
+    Search Member, Incharge and Book
+
+
+//-----Options
+Payment

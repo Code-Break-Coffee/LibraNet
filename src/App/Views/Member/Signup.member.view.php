@@ -104,7 +104,7 @@ loadComponent("ThemeToggle", ["classes" => "absolute top-3 left-4"]);
           OTP
         </label>
         <input
-          type="number"
+          type="tel"
           class="w-full rounded-lg border border-l-b-1 p-3 focus:border-l-b-1 focus:outline-none focus:ring-1 focus:ring-l-b-1 dark:border-d-2 dark:bg-l-6 dark:text-d-1 bg-l-5"
           placeholder="Enter your OTP" 
           name="otp" />
