@@ -166,13 +166,11 @@ class MemberController
                     $this->db->query("insert into unverified(email,user_type,code) values(:email,:user_type,:code)",["email"=>$email,"user_type"=>"member","code"=>password_hash($otp,PASSWORD_BCRYPT)]);
                 }
                 $warning["otp_message"]="Enter the OTP";
-                inspect($show_otp_input);
                 EmailController::sendEmail($email,"Verification Email","OTP Verification","<h1>$otp_message</h1>");
             }
             load("Member/Signup.member",["data"=>$_POST,"show_otp_input"=>$show_otp_input,"errors"=>$errors,"warning"=>$warning]);
             exit;
         }
-        inspect($show_otp_input);
         load("Member/Signup.member",["show_otp_input"=>$show_otp_input]);
     }
 

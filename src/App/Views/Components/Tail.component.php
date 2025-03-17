@@ -7,39 +7,49 @@
     const eyeSlashConfirm = document.getElementById('eye-slash-confirm');
     const passwordConfirm = document.querySelectorAll('input[type="password"]')[1];
 
-    if (eye && eyeSlash && password) {
-        eye.addEventListener("click", () => {
+    if (eye && eyeSlash && password)
+    {
+        eye.addEventListener("click", () =>
+        {
             eye.classList.add("hidden");
             eyeSlash.classList.remove("hidden");
             password.type = "password";
         });
 
-        eyeSlash.addEventListener("click", () => {
+        eyeSlash.addEventListener("click", () =>
+        {
             eyeSlash.classList.add("hidden");
             eye.classList.remove("hidden");
             password.type = "text";
         });
     }
 
-    if (eyeConfirm && eyeSlashConfirm && passwordConfirm) {
-        eyeConfirm.addEventListener("click", () => {
+    if (eyeConfirm && eyeSlashConfirm && passwordConfirm)
+    {
+        eyeConfirm.addEventListener("click", () =>
+        {
             eyeConfirm.classList.add("hidden");
             eyeSlashConfirm.classList.remove("hidden");
             passwordConfirm.type = "password";
         });
 
-        eyeSlashConfirm.addEventListener("click", () => {
+        eyeSlashConfirm.addEventListener("click", () =>
+        {
             eyeSlashConfirm.classList.add("hidden");
             eyeConfirm.classList.remove("hidden");
             passwordConfirm.type = "text";
         });
     }
 
-    const telInput = document.querySelector("[type='tel']");
-    if (telInput) {
-        telInput.addEventListener("input", (e) => {
-            const value = e.target.value.replace(/[^0-9]/g, '');
-            e.target.value = value;
+    const telInput = document.querySelectorAll("[type='tel']");
+    if(telInput)
+    {
+        telInput.forEach((input)=>
+        {
+            input.addEventListener("input",()=>
+            {
+                input.value = input.value.replace(/[^0-9]/g, "");
+            });
         });
     }
 
