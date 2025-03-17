@@ -10,7 +10,7 @@ Transactions-
 Book Manipulation
     Insert [Many too]
     Delete
-Incharge
+Profile
     Add Incharge
     Remove Incharge
     Change Details
@@ -19,5 +19,5 @@ Search
     Search Member, Incharge and Book
 
 
-//-----Options
+//-----Optional
 Payment
