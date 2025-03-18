@@ -36,7 +36,7 @@ class InchargeController
      */
     public function inchargeDashboard()
     {
-        load("Incharge/Dashboard.incharge");
+        load("Incharge/Dashboard.incharge.home");
     }
 
     /**
@@ -95,4 +95,60 @@ class InchargeController
         setcookie("PHPSESSID", "", time() - 86400, $params["path"], $params["domain"]);
         redirect("/incharge-signin");
     }
+
+    /**
+     * Incharge Dashboard Transactions
+     * @return void
+     */
+    public function inchargeTransactions()
+    {
+        load("Incharge/Dashboard.incharge.transactions");
+    }
+
+    /**
+     * Incharge Dashboard Profile
+     * @return void
+     */
+    public function inchargeProfile()
+    {
+        load("Incharge/Dashboard.incharge.profile");
+    }
+
+    /**
+     * Incharge Profile Add Incharge
+     * @return void
+     */
+    public function addIncharge()
+    {
+        load("Incharge/Dashboard.incharge.addIncharge");
+    }
+
+    /**
+     * Incharge Profile Remove Incharge
+     * @return void
+     */
+    public function removeIncharge()
+    {
+        load("Incharge/Dashboard.incharge.removeIncharge");
+    }
+
+    /**
+     * Incharge Profile Change Profile
+     * @return void
+     */
+    public function changeProfile()
+    {
+        load("Incharge/Dashboard.incharge.changeProfile");
+    }
+
+    /**
+     * Incharge Profile Ban Member
+     * @return void
+     */
+    public function banMember()
+    {
+        load("Incharge/Dashboard.incharge.banMember");
+    }
+
+
 }

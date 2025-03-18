@@ -36,10 +36,10 @@ loadComponent("Sidebar", [
                 <i class="fas fa-book-reader text-l-3 dark:text-d-3 text-2xl"></i>
                 <span class="ml-2 text-xl font-semibold text-l-3 dark:text-d-3">LibraNet</span>
             </div>
-            <div class="relative">
+            <!-- <div class="relative">
                 <input type="text" placeholder="Search books, members..." class="border dark:bg-[#101623] rounded-full py-2 px-4 pl-10 w-80 focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
-            </div>
+            </div> -->
         </div>
     </header>
     <main class="container mx-auto px-4 py-8">

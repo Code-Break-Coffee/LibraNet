@@ -13,6 +13,14 @@ $router->get("/member-signout","MemberController@memberSignout",["auth-member"])
 $router->get("/incharge-dashboard","InchargeController@inchargeDashboard",["auth-incharge"]);
 $router->get("/incharge-signin","InchargeController@index",["guest-incharge"]);
 
+//----Incharge Dashboard
+$router->get("/incharge-transactions","InchargeController@inchargeTransactions",["auth-incharge"]);
+$router->get("/incharge-profile","InchargeController@inchargeProfile",["auth-incharge"]);
+$router->get("/add-incharge","InchargeController@addIncharge",["auth-incharge"]);
+$router->get("/remove-incharge","InchargeController@removeIncharge",["auth-incharge"]);
+$router->get("/incharge-change-profile","InchargeController@changeProfile",["auth-incharge"]);
+$router->get("/ban-member","InchargeController@banMember",["auth-incharge"]);
+
 //------------------------------------------------------------------Post Requests
 
 //----Member
