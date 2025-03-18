@@ -53,6 +53,26 @@
         });
     }
 
+    const gear = document.querySelector("#gear");
+    if(gear)
+    {
+        const forms = document.querySelector(".forms");
+        if(forms)
+        {
+            gear.addEventListener("click",()=>
+            {
+                if(forms.classList.contains("hidden"))
+                {
+                    forms.classList.remove("hidden");
+                }
+                else
+                {
+                    forms.classList.add("hidden");
+                }
+            });
+        }
+    }
+
     // document.addEventListener('DOMContentLoaded', function() {
     //     const drawerToggle = document.querySelector('[data-drawer-toggle]');
     //     const drawer = document.getElementById(drawerToggle.getAttribute('data-drawer-target'));
