@@ -38,5 +38,13 @@ class Authorize
         {
             return redirect("/");
         }
+        else if($role === "guest-member" && $this->isAuthenticated("incharge"))
+        {
+            return redirect("/incharge-dashboard");
+        }
+        else if($role === "guest-incharge" && $this->isAuthenticated("member"))
+        {
+            return redirect("/member-dashboard");
+        }
     }
 }
