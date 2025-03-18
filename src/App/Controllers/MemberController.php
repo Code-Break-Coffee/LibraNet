@@ -94,6 +94,39 @@ class MemberController
      */
     public function memberForgotPassword()
     {
+        if($_SERVER["REQUEST_METHOD"]=="POST"){
+            $email = $_POST["email"];
+            $errors = [];
+            if(!Validation::email($email))
+            {
+                $errors["email"] = "Invalid Email !!!";
+            }
+            $user_exists= $this->db->query('select * from member where Email=:email',["email"=>$email])->fetch();
+            $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
+            if(!$user_exists && !$admin_exists)
+            {
+                $errors["email"]="Email does not exists !!!";
+            }
+            if(!empty($errors))
+            {
+                load("Member/ForgotPassword.member",["errors" => $errors]);
+                exit;
+            }
+            $otp=rand(100000,999999);
+            $otp_message="Your OTP is $otp";
+            EmailController::sendEmail($email,"Verification Email","OTP Verification","<h1>$otp_message</h1>");
+            $user_exists = $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
+            if($user_exists)
+            {
+                $this->db->query("update unverified set code=:code where email=:email",["code"=>password_hash($otp,PASSWORD_BCRYPT),"email"=>$email]);
+            }
+            else
+            {
+                $this->db->query("insert into unverified(email,user_type,code) values(:email,:user_type,:code)",["email"=>$email,"user_type"=>"member","code"=>password_hash($otp,PASSWORD_BCRYPT)]);
+            }
+            load("Member/UpdatePassword.member",["email"=>$email]);
+            exit;
+        }
         load("Member/ForgotPassword.member");
     }
 
@@ -197,10 +230,11 @@ class MemberController
         $errors = [];
         if(empty($errors)){
             $user_exists = $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
-            inspect(($user_exists->code));
-            inspect($otp);
-            inspect(password_verify($user_exists->code,$otp));
-            if($user_exists && password_verify($otp,$user_exists->code))
+            $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
+            if($user_exists || $admin_exists){
+                $errors["email"]="Email already exists !!!";
+            }
+            else if(password_verify($otp,$user_exists->code))
             {
                 $this->db->query("insert into member(FName,MName,LName,PhoneNo,Email,Password,Address,Affiliation,Remark,Status) values(:first_name,:middle_name,:last_name,:phone,:email,:password,:address,:affilate,:remark,:status)",["email"=>$email,"password"=>password_hash($password,PASSWORD_BCRYPT),"first_name"=>$first_name,"middle_name"=>$middle_name,"last_name"=>$last_name,"phone"=>$phone,"address"=>$address,"affilate"=>"","remark"=>"","status"=>"Active"]);
                 $this->db->query("delete from unverified where email=:email",["email"=>$email]);
@@ -208,6 +242,7 @@ class MemberController
             }
             else
             {
+
                 $errors["otp"]="Invalid OTP !!!";
                 $show_otp_input=true;
             }
@@ -223,4 +258,69 @@ class MemberController
     {
         load("Member/Dashboard.member");
     }
+
+
+    /**
+     * Updating Forgot Password for the 
+     * @return void
+     * 
+     */
+    public function UpdateforgotPassword(){
+        if($_SERVER["REQUEST_METHOD"]=="POST"){
+            $email = $_POST["email"];
+            $otp= $_POST["otp"];
+            $password = $_POST["password"];
+            $confirm_password = $_POST["confirm_password"];
+            $errors = [];
+            if(!Validation::email($email))
+            {
+                $errors["email"] = "Invalid Email !!!";
+            }
+            if(!Validation::string($password,8,50))
+            {
+                $errors["password"] = "Password length should be between 8 to 50 characters !!!";
+            }
+            if(!Validation::string($confirm_password,8,50))
+            {
+                $errors["confirm_password"] = "Password length should be between 8 to 50 characters !!!";
+            }
+            if(!Validation::match($password,$confirm_password))
+            {
+                $errors["password"] = "Password and Confirm Password should be same !!!";
+            }
+            $user_exists= $this->db->query('select * from unverified where email=:email',["email"=>$email])->fetch();
+            $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
+            if($user_exists)
+            {
+                $sql_query = "update member set Password=:password where Email=:email";
+            }
+            else if($admin_exists)
+            {
+                $sql_query = "update incharge set Password=:password where Email=:email";
+            }
+            else
+            {
+                $errors["email"]="Email does not exists !!!";
+            }
+            if(!empty($errors)){
+                load("Member/UpdatePassword.member",["errors"=>$errors,"email"=>$email]);
+                exit;
+            }
+
+            
+            if(password_verify($otp,$user_exists->code)) {
+                $this->db->query("update member set Password=:password where Email=:email",["password"=>password_hash($password,PASSWORD_BCRYPT),"email"=>$email]);
+                $this->db->query("delete from unverified where email=:email",["email"=>$email]);
+                redirect("/");
+            }
+            else
+            {
+                $errors["otp"]="Invalid Credentials !!!";
+                load("Member/UpdatePassword.member",["errors"=>$errors,"email"=>$email]);
+                exit;
+            }
+        }
+
+    }
+
 }
