@@ -4,6 +4,7 @@
 //----Member
 $router->get("/","MemberController@index",["guest-member"]);
 $router->get("/member-forgot-password","MemberController@memberForgotPassword",["guest-member"]);
+$router->get("/member-update-password","MemberController@memberUpdatePassword",["guest-member"]);
 $router->get("/member-signup","MemberController@memberSignup",["guest-member"]);
 $router->get("/member-dashboard","MemberController@memberDashboard",["auth-member"]);
 $router->get("/member-signout","MemberController@memberSignout",["auth-member"]);
@@ -16,6 +17,8 @@ $router->get("/incharge-signin","InchargeController@index",["guest-incharge"]);
 
 //----Member
 $router->post("/member-signin","MemberController@memberSignin",["guest-member"]);
+$router->post("/member-forgot-password","MemberController@memberForgotPassword",["guest-member"]);
+$router->post("/member-update-password","MemberController@UpdateforgotPassword",["guest-member"]);
 $router->post("/member-signup","MemberController@memberSignup",["guest-member"]);
 $router->post("/add-member","MemberController@addMember",["guest-member"]);
 
