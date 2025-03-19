@@ -33,3 +33,7 @@ $router->post("/add-member","MemberController@addMember",["guest-member"]);
 //----Incharge
 $router->post("/incharge-signin","InchargeController@inchargeSignin",["guest-incharge"]);
 $router->get("/incharge-signout","InchargeController@inchargeSignout",["auth-incharge"]);
+
+//----Books
+$router->post("/issue-book","BookController@issueBook",["auth-incharge"]);
+$router->post("/return-book","BookController@returnBook",["auth-incharge"]);

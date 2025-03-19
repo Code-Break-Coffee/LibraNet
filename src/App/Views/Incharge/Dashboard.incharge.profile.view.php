@@ -14,6 +14,14 @@ loadComponent("Sidebar", [
             "url" => "/incharge-profile",
             "icon" => "M5.121 17.804A4 4 0 0112 14a4 4 0 016.879 3.804M12 14a4 4 0 100-8 4 4 0 000 8z"
         ],
+        "Manipulation" => [
+            "url" => "/incharge-manipulation",
+            "icon" => "M4 19.5V5a2 2 0 012-2h10a2 2 0 012 2v14.5M16 2v16m-4-4l-4 4m0-4l4 4"
+        ],
+        "Search" => [
+            "url" => "/incharge-search",
+            "icon" => "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+        ],
         "Sign Out" => [
             "url" => "/incharge-signout",
             "icon" => "M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-6 0v-1m6-10V4a3 3 0 00-6 0v1"
@@ -21,16 +29,8 @@ loadComponent("Sidebar", [
     ]
 ]);
 ?>
-
 <div class="flex-1 bg-white dark:bg-[#090A0C] ml-16 text-gray-900 dark:text-white">
-    <header class="bg-gray-100 dark:bg-[#101623] shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <i class="fas fa-book-reader text-gray-700 dark:text-gray-300 text-2xl"></i>
-                <span class="ml-2 text-xl font-semibold text-gray-700 dark:text-gray-300">LibraNet</span>
-            </div>
-        </div>
-    </header>
+    <?= loadComponent("InchargeDashboard/Header") ?>
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
         <i id="gear" class="fa-solid fa-cog text-gray-600 dark:text-gray-300 text-2xl cursor-pointer absolute right-5 top-10"></i>

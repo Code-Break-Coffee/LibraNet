@@ -1,4 +1,5 @@
 <?php
+
 loadComponent("Head");
 loadComponent("Sidebar", [
     "components" => [
@@ -31,29 +32,33 @@ loadComponent("Sidebar", [
 ?>
 
 <div class="flex-1 bg-white dark:bg-[#090A0C] text-gray-900 dark:text-white ml-16">
-    <header class="bg-gray-100 dark:bg-[#101623] shadow-sm">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center">
-                <i class="fas fa-book-reader text-gray-700 dark:text-gray-300 text-2xl"></i>
-                <span class="ml-2 text-xl font-semibold text-gray-700 dark:text-gray-300">LibraNet</span>
-            </div>
-        </div>
-    </header>
+    <?= loadComponent("InchargeDashboard/Header") ?>
     <main class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Transactions</h1>
+        <?= isset($issue_errors) ? loadComponent("ErrorAlert", ["errors" => $issue_errors ?? []]) : "" ?>
+        <?= isset($return_errors) ? loadComponent("ErrorAlert", ["errors" => $return_errors ?? []]) : "" ?>
+        <?= isset($issueSuccess) ? loadComponent("SuccessAlert", ["msg" => $issueSuccess]) : "" ?>
+        <?= isset($returnSuccess) ? loadComponent("SuccessAlert", ["msg" => $returnSuccess]) : "" ?>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <form action="/issue-book" method="POST" class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Issue a Book</h2>
-                <input type="text" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                <input type="text" name="book_id" placeholder="Book ID" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <input value="<?= $issue_data["memberId"] ?? "" ?>" required type="tel" name="issue_member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <input value="<?= $issue_data["bookNo"] ?? "" ?>" required type="tel" name="issue_book_no" placeholder="Book No." class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <div class="relative">
+                    <input required type="password" name="issue_incharge_password" placeholder="Incharge Password" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <?= loadComponent("EyeIcons", ["position" => "right-2 top-3"]) ?>
+                </div>
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-600">Issue</button>
             </form>
-
             <form action="/return-book" method="POST" class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Return a Book</h2>
-                <input type="text" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                <input type="text" name="book_id" placeholder="Book ID" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <input value="<?= $return_data["memberId"] ?? "" ?>" required type="tel" name="return_member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <input value="<?= $return_data["bookNo"] ?? "" ?>" required type="tel" name="return_book_no" placeholder="Book No." class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <div class="relative">
+                    <input required type="password" name="return_incharge_password" placeholder="Incharge Password" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <?= loadComponent("EyeIconsConfirm", ["position" => "right-2 top-3"]) ?>
+                </div>
                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700">
                     Return
                 </button>
@@ -62,32 +67,34 @@ loadComponent("Sidebar", [
 
         <div class="mt-8 bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
             <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Transaction History</h2>
-            <table class="w-full border-collapse text-gray-800 dark:text-white border border-black dark:border-gray-600">
-                <thead>
-                    <tr class="bg-gray-200 dark:bg-gray-700">
-                        <th class="border border-black dark:border-gray-600 p-2">Transaction ID</th>
-                        <th class="border border-black dark:border-gray-600 p-2">Member ID</th>
-                        <th class="border border-black dark:border-gray-600 p-2">Book ID</th>
-                        <th class="border border-black dark:border-gray-600 p-2">Type</th>
-                        <th class="border border-black dark:border-gray-600 p-2">Date</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php
-                    $transactions = [];
-                    foreach ($transactions as $transaction) {
-                        echo "<tr class='hover:bg-gray-100 dark:hover:bg-gray-600'>
-                    <td class='border border-black dark:border-gray-600 p-2'>{$transaction['id']}</td>
-                    <td class='border border-black dark:border-gray-600 p-2'>{$transaction['member_id']}</td>
-                    <td class='border border-black dark:border-gray-600 p-2'>{$transaction['book_id']}</td>
-                    <td class='border border-black dark:border-gray-600 p-2'>{$transaction['type']}</td>
-                    <td class='border border-black dark:border-gray-600 p-2'>{$transaction['date']}</td>
-                </tr>";
-                    }
-                    ?>
-                </tbody>
-            </table>
 
+            <div class="overflow-x-auto">
+                <table class="w-full min-w-max border-collapse text-gray-800 dark:text-white border border-black dark:border-gray-600 md:border-separate">
+                    <thead>
+                        <tr class="bg-gray-200 dark:bg-gray-700">
+                            <th class="border border-black dark:border-gray-600 p-2">Transaction ID</th>
+                            <th class="border border-black dark:border-gray-600 p-2">Member ID</th>
+                            <th class="border border-black dark:border-gray-600 p-2">Book ID</th>
+                            <th class="border border-black dark:border-gray-600 p-2">Type</th>
+                            <th class="border border-black dark:border-gray-600 p-2">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php
+                        $transactions = [];
+                        foreach ($transactions as $transaction) {
+                            echo "<tr class='hover:bg-gray-100 dark:hover:bg-gray-600'>
+                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction['id']}</td>
+                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction['member_id']}</td>
+                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction['book_id']}</td>
+                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction['type']}</td>
+                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction['date']}</td>
+                    </tr>";
+                        }
+                        ?>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </main>
 </div>

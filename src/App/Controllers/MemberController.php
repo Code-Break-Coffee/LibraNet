@@ -263,7 +263,6 @@ class MemberController
     /**
      * Updating Forgot Password for the 
      * @return void
-     * 
      */
     public function UpdateforgotPassword(){
         if($_SERVER["REQUEST_METHOD"]=="POST"){
@@ -311,6 +310,7 @@ class MemberController
             if(password_verify($otp,$user_exists->code)) {
                 $this->db->query("update member set Password=:password where Email=:email",["password"=>password_hash($password,PASSWORD_BCRYPT),"email"=>$email]);
                 $this->db->query("delete from unverified where email=:email",["email"=>$email]);
+                EmailController::sendEmail($email,"Password Changed !!!","Password has been changed !!!","<h1>Your Password has been changed for LibraNet !!!</h1>");
                 redirect("/");
             }
             else

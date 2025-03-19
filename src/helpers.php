@@ -15,6 +15,7 @@ function basePath($path="")
 /**
  * Require a file
  * @param string $name
+ * @param array $data
  * @return void
  */
 
@@ -32,6 +33,7 @@ function load($name,$data=[])
 /**
  * Require a component
  * @param string $name
+ * @param array $data
  * @return void
  */
 
@@ -74,14 +76,20 @@ function inspectDie($value)
 }
 
 /**
- * Redirect
+ * Redirect with Query Parameters
  *
  * @param string $url
+ * @param array $data
  * @return void
  */
-function redirect($url,$data=[])
+function redirect($url, $data = [])
 {
-    extract($data);
+    if (!empty($data))
+    {
+        $queryString = http_build_query($data);
+        $url .= '?' . $queryString;
+    }
+    
     header("Location: $url");
     exit;
 }
