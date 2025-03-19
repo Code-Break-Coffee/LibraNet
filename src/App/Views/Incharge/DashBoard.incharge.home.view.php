@@ -46,3 +46,4 @@ loadComponent("Sidebar", [
         </div>
     </main>
 </div>
+<?= loadComponent("Tail"); ?>

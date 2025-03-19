@@ -35,5 +35,9 @@ $router->post("/incharge-signin","InchargeController@inchargeSignin",["guest-inc
 $router->get("/incharge-signout","InchargeController@inchargeSignout",["auth-incharge"]);
 
 //----Books
-$router->post("/issue-book","BookController@issueBook",["auth-incharge"]);
-$router->post("/return-book","BookController@returnBook",["auth-incharge"]);
+$router->post("/incharge-transactions","BookController@issueBook",["auth-incharge"]);
+
+//------------------------------------------------------------------Put Requests
+
+//----Books
+$router->put("/incharge-transactions","BookController@returnBook",["auth-incharge"]);
