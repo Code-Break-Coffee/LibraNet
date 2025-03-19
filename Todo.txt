@@ -1,6 +1,5 @@
 Zakie-----
 Mails should be sent only once
-Error Page
 Frontend for book Manipulation and Search
 
 //----------Dashboard
