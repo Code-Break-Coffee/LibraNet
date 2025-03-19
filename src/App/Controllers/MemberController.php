@@ -180,7 +180,8 @@ class MemberController
                 $errors["middle_name"] = "Middle Name should be atmost 15 length!!!";
             }
             $memeber_exists = $this->db->query("select * from member where Email=:email",["email"=>$email])->fetch();
-            if($memeber_exists)
+            $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
+            if($memeber_exists || $admin_exists)
             {
                 $errors["email"]="Email already exists !!!";
             }
@@ -228,6 +229,7 @@ class MemberController
         $confirm_password= $_POST["confirm_password"];
         $otp= $_POST["otp"];
         $errors = [];
+        $show_otp_input=false;
         if(empty($errors)){
             $user_exists = $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
             $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();

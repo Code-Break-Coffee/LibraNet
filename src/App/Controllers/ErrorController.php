@@ -12,7 +12,7 @@ class ErrorController
     public static function notFound($msg="Resource Not Found!!!")
     {
         http_response_code(404);
-        load("Error",[
+        load("Error/404",[
             "status"=>"404",
             "message"=>$msg,
         ]);

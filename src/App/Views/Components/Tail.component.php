@@ -73,6 +73,11 @@
         }
     }
 
+    const goback_button = document.getElementById("go-back");
+    goback_button.addEventListener("click", () => {
+        window.history.back();
+    });
+
     // document.addEventListener('DOMContentLoaded', function() {
     //     const drawerToggle = document.querySelector('[data-drawer-toggle]');
     //     const drawer = document.getElementById(drawerToggle.getAttribute('data-drawer-target'));
