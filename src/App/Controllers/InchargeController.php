@@ -102,7 +102,9 @@ class InchargeController
      */
     public function inchargeTransactions()
     {
-        load("Incharge/Dashboard.incharge.transactions");
+        $transactions=[];
+        $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
+        load("Incharge/Dashboard.incharge.transactions",["transactions" => $transactions]);
     }
 
     /**
