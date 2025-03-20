@@ -26,6 +26,9 @@ class MemberController
      */
     public function index()
     {
+        Session::destroy();
+        $params = session_get_cookie_params();
+        setcookie("PHPSESSID", "", time() - 86400, $params["path"], $params["domain"]);
         load("Member/Signin.member");
     }
 
@@ -112,21 +115,28 @@ class MemberController
                 load("Member/ForgotPassword.member",["errors" => $errors]);
                 exit;
             }
-            $otp=rand(100000,999999);
-            $otp_message="Your OTP is $otp";
-            EmailController::sendEmail($email,"Verification Email","OTP Verification","<h1>$otp_message</h1>");
-            $user_exists = $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
-            if($user_exists)
+            if(!isset($_SESSION["issession"]))
             {
-                $this->db->query("update unverified set code=:code where email=:email",["code"=>password_hash($otp,PASSWORD_BCRYPT),"email"=>$email]);
-            }
-            else
-            {
-                $this->db->query("insert into unverified(email,user_type,code) values(:email,:user_type,:code)",["email"=>$email,"user_type"=>"member","code"=>password_hash($otp,PASSWORD_BCRYPT)]);
+                $otp=rand(100000,999999);
+                $otp_message="Your OTP is $otp";
+                EmailController::sendEmail($email,"Verification Email for Forgot Password","OTP Verification","<h1>$otp_message</h1>");
+                $user_exists = $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
+                if($user_exists)
+                {
+                    $this->db->query("update unverified set code=:code where email=:email",["code"=>password_hash($otp,PASSWORD_BCRYPT),"email"=>$email]);
+                }
+                else
+                {
+                    $this->db->query("insert into unverified(email,user_type,code) values(:email,:user_type,:code)",["email"=>$email,"user_type"=>"member","code"=>password_hash($otp,PASSWORD_BCRYPT)]);
+                }
+                $_SESSION["issession"]=true;
             }
             load("Member/UpdatePassword.member",["email"=>$email]);
             exit;
         }
+        Session::destroy();
+        $params = session_get_cookie_params();
+        setcookie("PHPSESSID", "", time() - 86400, $params["path"], $params["domain"]);
         load("Member/ForgotPassword.member");
     }
 
@@ -136,7 +146,6 @@ class MemberController
      */
     public function memberSignup()
     {
-        $show_otp_input=false;
         if($_SERVER['REQUEST_METHOD'] === 'POST'){
             $email= $_POST["email"];
             $first_name= $_POST["first_name"];
@@ -179,14 +188,13 @@ class MemberController
             {
                 $errors["middle_name"] = "Middle Name should be atmost 15 length!!!";
             }
-            $memeber_exists = $this->db->query("select * from member where Email=:email",["email"=>$email])->fetch();
+            $memeber_exists = $this->db->query("select * from member where email=:email",["email"=>$email])->fetch();
             $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
             if($memeber_exists || $admin_exists)
             {
                 $errors["email"]="Email already exists !!!";
             }
-
-            if(empty($errors)){
+            if(empty($errors) && !isset($_SESSION["issession"])){
                 $show_otp_input=true;
                 $otp=rand(100000,999999);
                 $otp_message="Your OTP is $otp";
@@ -200,11 +208,21 @@ class MemberController
                     $this->db->query("insert into unverified(email,user_type,code) values(:email,:user_type,:code)",["email"=>$email,"user_type"=>"member","code"=>password_hash($otp,PASSWORD_BCRYPT)]);
                 }
                 $warning["otp_message"]="Enter the OTP";
-                EmailController::sendEmail($email,"Verification Email","OTP Verification","<h1>$otp_message</h1>");
+                EmailController::sendEmail($email,"Verification Email for New Account","OTP Verification","<h1>$otp_message</h1>");
+                $_SESSION["issession"]=true;
             }
-            load("Member/Signup.member",["data"=>$_POST,"show_otp_input"=>$show_otp_input,"errors"=>$errors,"warning"=>$warning]);
+            if(!empty($errors)){
+                load("Member/Signup.member",["data"=>$_POST,"show_otp_input"=>false,"errors"=>$errors,"warning"=>$warning]);
+            }
+            else{
+                load("Member/Signup.member",["data"=>$_POST,"show_otp_input"=>true,"errors"=>$errors,"warning"=>$warning]);
+            }
             exit;
         }
+        Session::destroy();
+        $params = session_get_cookie_params();
+        setcookie("PHPSESSID", "", time() - 86400, $params["path"], $params["domain"]);
+        $show_otp_input=false;
         load("Member/Signup.member",["show_otp_input"=>$show_otp_input]);
     }
 
@@ -231,15 +249,17 @@ class MemberController
         $errors = [];
         $show_otp_input=false;
         if(empty($errors)){
-            $user_exists = $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
+            $user_exists = $this->db->query("select * from member where email=:email",["email"=>$email])->fetch();
             $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
+            $unverfied_exists= $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
             if($user_exists || $admin_exists){
                 $errors["email"]="Email already exists !!!";
             }
-            else if(password_verify($otp,$user_exists->code))
+            else if(password_verify($otp,$unverfied_exists->code))
             {
                 $this->db->query("insert into member(FName,MName,LName,PhoneNo,Email,Password,Address,Affiliation,Remark,Status) values(:first_name,:middle_name,:last_name,:phone,:email,:password,:address,:affilate,:remark,:status)",["email"=>$email,"password"=>password_hash($password,PASSWORD_BCRYPT),"first_name"=>$first_name,"middle_name"=>$middle_name,"last_name"=>$last_name,"phone"=>$phone,"address"=>$address,"affilate"=>"","remark"=>"","status"=>"Active"]);
                 $this->db->query("delete from unverified where email=:email",["email"=>$email]);
+                EmailController::sendEmail($email,"Welcome to LibraNet !!!","Welcome to LibraNet","<h1>SignIn Completed Succesfully !!!</h1>");
                 redirect("/");
             }
             else
