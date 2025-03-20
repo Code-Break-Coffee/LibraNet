@@ -29,7 +29,7 @@ loadComponent("Sidebar", [
     ]
 ]);
 ?>
-<div class="flex-1 bg-l-1 dark:bg-[#090A0C] ml-16">
+<div class="flex-1 bg-l-1 dark:bg-[#090A0C] ml-16 h-screen">
     <?= loadComponent("InchargeDashboard/Header") ?>
     <!-- <div class="relative">
                 <input type="text" placeholder="Search books, members..." class="border dark:bg-[#101623] rounded-full py-2 px-4 pl-10 w-80 focus:outline-none focus:ring-2 focus:ring-blue-500">
