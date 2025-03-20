@@ -31,7 +31,7 @@ loadComponent("Sidebar", [
 ]);
 ?>
 
-<div class="flex-1 bg-white dark:bg-[#090A0C] text-gray-900 dark:text-white ml-16">
+<div class="flex-1 bg-white dark:bg-[#090A0C] text-gray-900 dark:text-white ml-16 h-screen">
     <?= loadComponent("InchargeDashboard/Header") ?>
     <main class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Transactions</h1>
@@ -58,7 +58,7 @@ loadComponent("Sidebar", [
             </form>
         </div>
 
-        <div class="mt-8 bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
+        <div class="mt-8 bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md h-auto">
             <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Transaction History</h2>
 
             <div class="overflow-x-auto">

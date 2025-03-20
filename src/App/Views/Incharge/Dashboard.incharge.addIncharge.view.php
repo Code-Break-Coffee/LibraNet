@@ -30,7 +30,7 @@ loadComponent("Sidebar", [
 ]);
 ?>
 
-<div class="flex-1 bg-white dark:bg-[#090A0C] ml-16 text-gray-900 dark:text-white">
+<div class="flex-1 bg-white dark:bg-[#090A0C] ml-16 text-gray-900 dark:text-white h-screen">
     <?=loadComponent("InchargeDashboard/Header") ?>
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
@@ -41,13 +41,25 @@ loadComponent("Sidebar", [
             <a href="/incharge-change-profile" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Change Profile</a>
             <a href="/ban-member" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Ban Member</a>
         </div>
-        <div class="flex justify-center items-center">
-            <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-lg">
-                <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Add Incharge</h2>
-                <input type="text" name="incharge_name" placeholder="Incharge Name" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                <input type="email" name="incharge_email" placeholder="Incharge Email" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+        <div class="flex justify-center items-center min-h-[70vh]">
+            <form class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-lg">
+                <center>
+                    <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Add Incharge</h2>
+                </center>
+                <input required type="text" name="incharge_firstName" placeholder="Incharge First Name" class="w-full mb-4 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input type="text" name="incharge_middleName" placeholder="Incharge Middle Name" class="w-full mb-4 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input required type="text" name="incharge_LastName" placeholder="Incharge Last Name" class="w-full mb-4 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input required type="email" name="incharge_email" placeholder="Incharge Email" class="w-full mb-4 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input required type="tel" name="incharge_phoneNo" placeholder="Incharge Phone No." class="w-full mb-4 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input required type="text" name="incharge_designation" placeholder="Incharge Designation" class="w-full mb-4 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <select required name="incharge_tier" class="border dark:border-gray-600 dark:bg-gray-700 dark:text-white mb-4 p-2 col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 sm:text-sm/6">
+                    <option value="">Select Tier</option>
+                    <option value="1">Tier 1</option>
+                    <option value="2">Tier 2</option>
+                    <option value="3">Tier 3</option>
+                </select>
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700">Add</button>
-            </div>
+            </form>
         </div>
     </main>
 </div>

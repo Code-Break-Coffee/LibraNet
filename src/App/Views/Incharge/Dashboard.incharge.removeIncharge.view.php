@@ -30,7 +30,7 @@ loadComponent("Sidebar", [
 ]);
 ?>
 
-<div class="flex-1 bg-white dark:bg-[#090A0C] ml-16 text-gray-900 dark:text-white">
+<div class="flex-1 bg-white dark:bg-[#090A0C] ml-16 text-gray-900 dark:text-white h-screen">
     <?= loadComponent("InchargeDashboard/Header") ?>
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
@@ -41,7 +41,7 @@ loadComponent("Sidebar", [
             <a href="/incharge-change-profile" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Change Profile</a>
             <a href="/ban-member" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Ban Member</a>
         </div>
-        <div class="flex justify-center items-center">
+        <div class="flex justify-center items-center min-h-[70vh]">
             <div class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Remove Incharge</h2>
                 <input type="text" name="incharge_id" placeholder="Incharge ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">

@@ -29,7 +29,7 @@ loadComponent("Sidebar", [
     ]
 ]);
 ?>
-<div class="flex-1 bg-white dark:bg-[#090A0C] ml-16 text-gray-900 dark:text-white">
+<div class="flex-1 bg-white dark:bg-[#090A0C] ml-16 text-gray-900 dark:text-white h-screen">
     <?= loadComponent("InchargeDashboard/Header") ?>
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
