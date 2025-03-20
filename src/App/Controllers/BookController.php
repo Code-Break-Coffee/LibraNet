@@ -30,6 +30,7 @@ class BookController
         $memberId = $_POST["issue_member_id"];
         $inchargeId = Session::get("incharge")["Id"];
 
+        $transactions=[];
         $errors=[];
 
         if(!Validation::string($bookNo))
@@ -43,12 +44,14 @@ class BookController
 
         if(!empty($errors))
         {
+            $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "issue_errors" => $errors,
                 "issue_data" => [
                     "bookNo" => $bookNo,
                     "memberId" => $memberId
-                ]
+                ],
+                "transactions" => $transactions
             ]);
             exit;
         }
@@ -65,11 +68,13 @@ class BookController
         if(!$member)
         {
             $errors["memberId"] = "Invalid Member ID !!!";
+            $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "issue_errors" => $errors,
                 "issue_data" => [
                     "bookNo" => $bookNo,
-                ]
+                ],
+                "transactions" => $transactions
             ]);
             exit;
         }
@@ -79,23 +84,27 @@ class BookController
         if(!$book)
         {
             $errors["inchargePassword"] = "Invalid Book No. !!!";
+            $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "issue_errors" => $errors,
                 "issue_data" => [
                     "memberId" => $memberId
-                ]
+                ],
+                "transactions" => $transactions
             ]);
             exit;
         }
 
         if(strtoupper($book->Status) === "ISSUED")
         {
+            $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             $errors["bookNo"] = "Book is not Available right now !!!";
             load("Incharge/Dashboard.incharge.transactions",[
                 "issue_errors" => $errors,
                 "issue_data" => [
                     "memberId" => $memberId
-                ]
+                ],
+                "transactions" => $transactions
             ]);
             exit;
         }
@@ -130,6 +139,7 @@ class BookController
         $inchargeId = Session::get("incharge")["Id"];
 
         $errors=[];
+        $transactions=[];
 
         if(!Validation::string($bookNo))
         {
@@ -142,12 +152,14 @@ class BookController
 
         if(!empty($errors))
         {
+            $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "return_errors" => $errors,
                 "return_data" => [
                     "bookNo" => $bookNo,
                     "memberId" => $memberId
-                ]
+                ],
+                "transactions" => $transactions
             ]);
             exit;
         }
@@ -164,11 +176,13 @@ class BookController
         if(!$member)
         {
             $errors["memberId"] = "Invalid Member ID !!!";
+            $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "return_errors" => $errors,
                 "return_data" => [
                     "bookNo" => $bookNo,
-                ]
+                ],
+                "transactions" => $transactions
             ]);
             exit;
         }
@@ -178,11 +192,13 @@ class BookController
         if(!$book)
         {
             $errors["inchargePassword"] = "Invalid Book No. !!!";
+            $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "return_errors" => $errors,
                 "return_data" => [
                     "memberId" => $memberId
-                ]
+                ],
+                "transactions" => $transactions
             ]);
             exit;
         }
@@ -190,11 +206,13 @@ class BookController
         if(strtoupper($book->Status) === "AVAILABLE")
         {
             $errors["bookNo"] = "Book is not Issued by any Member !!!";
+            $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "return_errors" => $errors,
                 "return_data" => [
                     "memberId" => $memberId
-                ]
+                ],
+                "transactions" => $transactions
             ]);
             exit;
         }
@@ -233,13 +251,15 @@ class BookController
         }
         else
         {
+            $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             $errors["bookNo"] = "This Book is not Issued by this Member !!!";
             load("Incharge/Dashboard.incharge.transactions",[
                 "return_errors" => $errors,
                 "return_data" => [
                     "memberId" => $memberId,
                     "bookNo" => $bookNo
-                ]
+                ],
+                "transactions" => $transactions
             ]);
             exit;
         }
