@@ -28,7 +28,6 @@ class BookController
     {
         $bookNo = $_POST["issue_book_no"];
         $memberId = $_POST["issue_member_id"];
-        $inchargePassword = $_POST["issue_incharge_password"];
         $inchargeId = Session::get("incharge")["Id"];
 
         $errors=[];
@@ -40,10 +39,6 @@ class BookController
         if(!Validation::string($memberId))
         {
             $errors["memberId"] = "Invalid Member ID !!!";
-        }
-        if(!Validation::string($inchargePassword,8,50))
-        {
-            $errors["inchargePassword"] = "Password should be between 8 and 50 characters !!!";
         }
 
         if(!empty($errors))
@@ -63,18 +58,6 @@ class BookController
         if(!$incharge)
         {
             redirect("/incharge-dashboard");
-        }
-        if(!password_verify($inchargePassword,$incharge->password))
-        {
-            $errors["inchargePassword"] = "Incorrect Password !!!";
-            load("Incharge/Dashboard.incharge.transactions",[
-                "issue_errors" => $errors,
-                "issue_data" => [
-                    "bookNo" => $bookNo,
-                    "memberId" => $memberId
-                ]
-            ]);
-            exit;
         }
 
         //-----Member Check
@@ -144,7 +127,6 @@ class BookController
     {
         $bookNo = $_POST["return_book_no"];
         $memberId = $_POST["return_member_id"];
-        $inchargePassword = $_POST["return_incharge_password"];
         $inchargeId = Session::get("incharge")["Id"];
 
         $errors=[];
@@ -156,10 +138,6 @@ class BookController
         if(!Validation::string($memberId))
         {
             $errors["memberId"] = "Invalid Member ID !!!";
-        }
-        if(!Validation::string($inchargePassword,8,50))
-        {
-            $errors["inchargePassword"] = "Password should be between 8 and 50 characters !!!";
         }
 
         if(!empty($errors))
@@ -179,18 +157,6 @@ class BookController
         if(!$incharge)
         {
             redirect("/incharge-dashboard");
-        }
-        if(!password_verify($inchargePassword,$incharge->password))
-        {
-            $errors["inchargePassword"] = "Incorrect Password !!!";
-            load("Incharge/Dashboard.incharge.transactions",[
-                "return_errors" => $errors,
-                "return_data" => [
-                    "bookNo" => $bookNo,
-                    "memberId" => $memberId
-                ]
-            ]);
-            exit;
         }
 
         //-----Member Check

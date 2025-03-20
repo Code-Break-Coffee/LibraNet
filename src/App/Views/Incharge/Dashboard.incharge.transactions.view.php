@@ -45,10 +45,6 @@ loadComponent("Sidebar", [
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Issue a Book</h2>
                 <input value="<?= $issue_data["memberId"] ?? "" ?>" required type="tel" name="issue_member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <input value="<?= $issue_data["bookNo"] ?? "" ?>" required type="tel" name="issue_book_no" placeholder="Book No." class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                <div class="relative">
-                    <input required type="password" name="issue_incharge_password" placeholder="Incharge Password" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <?= loadComponent("EyeIcons", ["position" => "right-2 top-3"]) ?>
-                </div>
                 <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded w-full hover:bg-blue-600">Issue</button>
             </form>
             <form action="/incharge-transactions" method="POST" class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -56,10 +52,6 @@ loadComponent("Sidebar", [
                 <input type="hidden" name="_method" value="PUT"/>
                 <input value="<?= $return_data["memberId"] ?? "" ?>" required type="tel" name="return_member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <input value="<?= $return_data["bookNo"] ?? "" ?>" required type="tel" name="return_book_no" placeholder="Book No." class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                <div class="relative">
-                    <input required type="password" name="return_incharge_password" placeholder="Incharge Password" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <?= loadComponent("EyeIconsConfirm", ["position" => "right-2 top-3"]) ?>
-                </div>
                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700">
                     Return
                 </button>
