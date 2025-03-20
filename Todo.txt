@@ -1,7 +1,6 @@
 Zakie-----
-Mails should be sent only once
 Frontend for book Manipulation and Search
-
+Blackend for Creating new Incharge
 //----------Dashboard
 Transactions-
     Issue
