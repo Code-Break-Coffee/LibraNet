@@ -309,13 +309,14 @@ class MemberController
             {
                 $errors["password"] = "Password and Confirm Password should be same !!!";
             }
-            $user_exists= $this->db->query('select * from unverified where email=:email',["email"=>$email])->fetch();
+            $unverified_exists= $this->db->query('select * from unverified where email=:email',["email"=>$email])->fetch();
+            $user_exists = $this->db->query("select * from member where email=:email",["email"=>$email])->fetch();
             $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
-            if($user_exists)
+            if($user_exists && $unverified_exists)
             {
                 $sql_query = "update member set Password=:password where Email=:email";
             }
-            else if($admin_exists)
+            else if($admin_exists && $unverified_exists)
             {
                 $sql_query = "update incharge set Password=:password where Email=:email";
             }
@@ -329,8 +330,14 @@ class MemberController
             }
 
             
-            if(password_verify($otp,$user_exists->code)) {
-                $this->db->query("update member set Password=:password where Email=:email",["password"=>password_hash($password,PASSWORD_BCRYPT),"email"=>$email]);
+            if(isset($user_exists) && password_verify($otp,$unverified_exists->code)) {
+                $this->db->query("update member set Password=:password where email=:email",["password"=>password_hash($password,PASSWORD_BCRYPT),"email"=>$email]);
+                $this->db->query("delete from unverified where email=:email",["email"=>$email]);
+                EmailController::sendEmail($email,"Password Changed !!!","Password has been changed !!!","<h1>Your Password has been changed for LibraNet !!!</h1>");
+                redirect("/");
+            }
+            if(isset($admin_exists) && password_verify($otp,$unverified_exists->code)) {
+                $this->db->query("update incharge set Password=:password where Email=:email",["password"=>password_hash($password,PASSWORD_BCRYPT),"email"=>$email]);
                 $this->db->query("delete from unverified where email=:email",["email"=>$email]);
                 EmailController::sendEmail($email,"Password Changed !!!","Password has been changed !!!","<h1>Your Password has been changed for LibraNet !!!</h1>");
                 redirect("/");
