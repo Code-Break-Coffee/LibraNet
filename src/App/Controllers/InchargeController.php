@@ -122,6 +122,71 @@ class InchargeController
      */
     public function addIncharge()
     {
+        if($_SERVER["REQUEST_METHOD"] == "POST")
+        {
+            $first_name = $_POST["incharge_firstName"];
+            $middle_name = $_POST["incharge_middleName"] == "" ? null : $_POST["incharge_middleName"];
+            $last_name = $_POST["incharge_LastName"];
+            $email = $_POST["incharge_email"];
+            $phone = $_POST["incharge_phoneNo"];
+            $incharge_designation = $_POST["incharge_designation"];
+            $tier = $_POST["incharge_tier"];
+            $errors=[];
+            if(!Validation::string($first_name,3,50))
+            {
+                $errors["first_name"] = "First Name must be between 3 and 50 characters !!!";
+            }
+            if(!Validation::string($middle_name,0,50) && $middle_name != null)
+            {
+                $errors["middle_name"] = "Middle Name must be between 3 and 50 characters !!!";
+            }
+            if(!Validation::string($last_name,3,50))
+            {
+                $errors["last_name"] = "Last Name must be between 3 and 50 characters !!!";
+            }
+            if(!Validation::email($email))
+            {
+                $errors["email"] = "Invalid Email !!!";
+            }
+            if(!Validation::phone($phone))
+            {
+                $errors["phone"] = "Invalid Phone Number !!!";
+            }
+            if(!Validation::string($incharge_designation,3,50))
+            {
+                $errors["incharge_designation"] = "Designation must be between 3 and 50 characters !!!";
+            }
+            if(!empty($errors))
+            {
+                load("Incharge/Dashboard.incharge.addIncharge",["errors" => $errors]);
+                exit;
+            }
+            $params=[
+                "email" => $email
+            ];
+            $incharge_exists = $this->db->query("SELECT * from incharge where email=:email", $params)->fetch();
+            $user_exists = $this->db->query("SELECT * from member where email=:email", $params)->fetch();
+            if($incharge_exists || $user_exists)
+            {
+                $errors["email"] = "Email already exists !!!";
+                load("Incharge/Dashboard.incharge.addIncharge",["errors" => $errors]);
+                exit;
+            }
+            $params=[
+                "FName" => $first_name,
+                "MName" => $middle_name,
+                "LName" => $last_name,
+                "PhoneNo" => $phone,
+                "Designation" => $incharge_designation,
+                "Tier" => $tier,
+                "Remark" => null,
+                "email" => $email,
+                "password" => password_hash("12345678",PASSWORD_DEFAULT)
+            ];
+            $this->db->query("INSERT into incharge(FName,MName,LName,PhoneNo,Designation,Tier,Remark,email,password) values(:FName,:MName,:LName,:PhoneNo,:Designation,:Tier,:Remark,:email,:password)",$params);
+            redirect("/add-incharge",["success" => "Incharge Added Successfully !!!"]);
+            exit;
+        }
         load("Incharge/Dashboard.incharge.addIncharge");
     }
 

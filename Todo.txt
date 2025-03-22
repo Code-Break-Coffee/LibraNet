@@ -1,7 +1,12 @@
 Zakie-----
 Frontend for book Manipulation and Search
 Blackend for Creating new Incharge
+Signup Signin Forgot Password ReWork
+
 //----------Dashboard
+Tanishq----
+DashBoard Query ReWork
+
 Transactions-
     Issue
     Return

@@ -41,8 +41,10 @@ loadComponent("Sidebar", [
             <a href="/incharge-change-profile" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Change Profile</a>
             <a href="/ban-member" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Ban Member</a>
         </div>
+        <?=isset($errors) ? loadComponent("ErrorAlert",["errors"=>$errors ?? []]) : ""?>
+        <?=isset($errors) ? loadComponent("WarningAlert",["warnings" => $success ?? []]) : ""?>
         <div class="flex justify-center items-center min-h-[70vh]">
-            <form class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-lg">
+            <form class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-lg" action="/add-incharge" method="post">
                 <center>
                     <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Add Incharge</h2>
                 </center>
