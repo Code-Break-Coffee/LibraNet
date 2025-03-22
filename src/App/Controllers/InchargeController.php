@@ -216,6 +216,13 @@ class InchargeController
     {
         load("Incharge/Dashboard.incharge.banMember");
     }
-
-
+    
+    /**
+     * Incharge Profile Unban Member
+     * @return void
+     */
+    public function unbanMember()
+    {
+        load("Incharge/Dashboard.incharge.unbanMember");
+    }
 }
