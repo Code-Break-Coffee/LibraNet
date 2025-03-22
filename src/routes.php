@@ -20,6 +20,7 @@ $router->get("/add-incharge","InchargeController@addIncharge",["auth-incharge"])
 $router->get("/remove-incharge","InchargeController@removeIncharge",["auth-incharge"]);
 $router->get("/incharge-change-profile","InchargeController@changeProfile",["auth-incharge"]);
 $router->get("/ban-member","InchargeController@banMember",["auth-incharge"]);
+$router->get("/unban-member","InchargeController@unbanMember",["auth-incharge"]);
 
 //------------------------------------------------------------------Post Requests
 
