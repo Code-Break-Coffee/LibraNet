@@ -65,21 +65,21 @@ class InchargeController
         $params=[
             "email" => $email
         ];
-        $incharge = $this->db->query("SELECT * from incharge where email=:email", $params)->fetch();
+        $incharge = $this->db->query("SELECT * from incharge_auth where Email=:email", $params)->fetch();
         if(!$incharge)
         {
             $errors["email"] = "Invalid Email or Password !!!";
             load("Incharge/Signin.incharge",["errors" => $errors]);
             exit;
         }
-        if(!password_verify($password,$incharge->password))
+        if(!password_verify($password,$incharge->Password))
         {
             $errors["email"] = "Invalid Email or Password !!!";
             load("Incharge/Signin.incharge",["errors" => $errors]);
             exit;
         }
         Session::set("incharge",[
-            "Id" => $incharge->Id
+            "Id" => $incharge->InchargeId
         ]);
         redirect("/incharge-dashboard");
     }
@@ -164,8 +164,8 @@ class InchargeController
             $params=[
                 "email" => $email
             ];
-            $incharge_exists = $this->db->query("SELECT * from incharge where email=:email", $params)->fetch();
-            $user_exists = $this->db->query("SELECT * from member where email=:email", $params)->fetch();
+            $incharge_exists = $this->db->query("SELECT * from incharge_auth where Email=:email", $params)->fetch();
+            $user_exists = $this->db->query("SELECT * from member_auth where Email=:email", $params)->fetch();
             if($incharge_exists || $user_exists)
             {
                 $errors["email"] = "Email already exists !!!";
@@ -180,10 +180,17 @@ class InchargeController
                 "Designation" => $incharge_designation,
                 "Tier" => $tier,
                 "Remark" => null,
-                "email" => $email,
-                "password" => password_hash("12345678",PASSWORD_DEFAULT)
             ];
-            $this->db->query("INSERT into incharge(FName,MName,LName,PhoneNo,Designation,Tier,Remark,email,password) values(:FName,:MName,:LName,:PhoneNo,:Designation,:Tier,:Remark,:email,:password)",$params);
+            $this->db->query("INSERT into incharge(FName,MName,LName,PhoneNo,Designation,Tier,Remark) values(:FName,:MName,:LName,:PhoneNo,:Designation,:Tier,:Remark)",$params);
+            $random_password = random_int(10000000,99999999);
+            $current_incharge=$this->db->conn->lastInsertId();
+            $new_params=[
+                "InchargeId" => $current_incharge,
+                "email" => $email,
+                "password" => password_hash($random_password,PASSWORD_DEFAULT)
+            ];
+            $this->db->query("INSERT into incharge_auth(InchargeId,Email,Password) values(:InchargeId,:email,:password)",$new_params);
+            EmailController::sendEmail($email,"Incharge Account Created Successfully","Your Incharge Account has been created.","<h1>Your Password is $random_password. Please change your password after logging in.</h1>");
             redirect("/add-incharge",["success" => "Incharge Added Successfully !!!"]);
             exit;
         }
