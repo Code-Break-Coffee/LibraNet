@@ -122,6 +122,7 @@ class InchargeController
      */
     public function addIncharge()
     {
+        $inchargeTier = $this->getInchargeTier();
         if($_SERVER["REQUEST_METHOD"] == "POST")
         {
             $first_name = $_POST["incharge_firstName"];
@@ -132,6 +133,10 @@ class InchargeController
             $incharge_designation = $_POST["incharge_designation"];
             $tier = $_POST["incharge_tier"];
             $errors=[];
+            if((int)$tier > $inchargeTier)
+            {
+                $errors["tier"] = "You can't add an Incharge of higher Tier !!!";
+            }
             if(!Validation::string($first_name,3,50))
             {
                 $errors["first_name"] = "First Name must be between 3 and 50 characters !!!";
@@ -158,7 +163,10 @@ class InchargeController
             }
             if(!empty($errors))
             {
-                load("Incharge/Dashboard.incharge.addIncharge",["errors" => $errors]);
+                load("Incharge/Dashboard.incharge.addIncharge",[
+                    "errors" => $errors,
+                    "Tier" => $inchargeTier
+                ]);
                 exit;
             }
             $params=[
@@ -169,7 +177,10 @@ class InchargeController
             if($incharge_exists || $user_exists)
             {
                 $errors["email"] = "Email already exists !!!";
-                load("Incharge/Dashboard.incharge.addIncharge",["errors" => $errors]);
+                load("Incharge/Dashboard.incharge.addIncharge",[
+                    "errors" => $errors,
+                    "Tier" => $inchargeTier
+                ]);
                 exit;
             }
             $params=[
@@ -187,14 +198,23 @@ class InchargeController
             $new_params=[
                 "InchargeId" => $current_incharge,
                 "email" => $email,
-                "password" => password_hash($random_password,PASSWORD_DEFAULT)
+                "password" => password_hash($random_password,PASSWORD_BCRYPT)
             ];
             $this->db->query("INSERT into incharge_auth(InchargeId,Email,Password) values(:InchargeId,:email,:password)",$new_params);
             EmailController::sendEmail($email,"Incharge Account Created Successfully","Your Incharge Account has been created.","<h1>Your Password is $random_password. Please change your password after logging in.</h1>");
             redirect("/add-incharge",["success" => "Incharge Added Successfully !!!"]);
             exit;
         }
-        load("Incharge/Dashboard.incharge.addIncharge");
+        load("Incharge/Dashboard.incharge.addIncharge",["Tier" => $inchargeTier]);
+    }
+
+    /**
+     * Get Session Incharge Tier
+     * @return int
+     */
+    public function getInchargeTier()
+    {
+        return (int) $this->db->query("SELECT Tier from incharge where Id = :id",["id" => Session::get("incharge")["Id"]])->fetch()->Tier;
     }
 
     /**

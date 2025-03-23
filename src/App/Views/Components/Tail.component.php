@@ -74,9 +74,12 @@
     }
 
     const goback_button = document.getElementById("go-back");
-    goback_button.addEventListener("click", () => {
-        window.history.back();
-    });
+    if(goback_button)
+    {
+        goback_button.addEventListener("click", () => {
+            window.history.back();
+        });
+    }
 
     // document.addEventListener('DOMContentLoaded', function() {
     //     const drawerToggle = document.querySelector('[data-drawer-toggle]');
