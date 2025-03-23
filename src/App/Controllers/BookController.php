@@ -27,7 +27,7 @@ class BookController
     public function issueBook()
     {
         $bookNo = $_POST["issue_book_no"];
-        $memberId = $_POST["issue_member_id"];
+        $memberEmail = $_POST["issue_member_email"];
         $inchargeId = Session::get("incharge")["Id"];
 
         $transactions=[];
@@ -37,9 +37,9 @@ class BookController
         {
             $errors["bookNo"] = "Invalid Book No. !!!";
         }
-        if(!Validation::string($memberId))
+        if(!Validation::email($memberEmail))
         {
-            $errors["memberId"] = "Invalid Member ID !!!";
+            $errors["memberEmail"] = "Invalid Email !!!";
         }
 
         if(!empty($errors))
@@ -49,7 +49,7 @@ class BookController
                 "issue_errors" => $errors,
                 "issue_data" => [
                     "bookNo" => $bookNo,
-                    "memberId" => $memberId
+                    "memberEmail" => $memberEmail
                 ],
                 "transactions" => $transactions
             ]);
@@ -64,10 +64,12 @@ class BookController
         }
 
         //-----Member Check
-        $member = $this->db->query("SELECT * from member where Id = :memberId",["memberId" => $memberId])->fetch();
+        $member = $this->db->query("SELECT * from member where
+        id = (SELECT MemberId from member_auth where Email = :memberEmail)
+        ",["memberEmail" => $memberEmail])->fetch();
         if(!$member)
         {
-            $errors["memberId"] = "Invalid Member ID !!!";
+            $errors["memberEmail"] = "This Email is not Registered !!!";
             $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "issue_errors" => $errors,
@@ -83,12 +85,12 @@ class BookController
         $book = $this->db->query("SELECT * from book_master where BookNo = :bookNo",["bookNo" => $bookNo])->fetch();
         if(!$book)
         {
-            $errors["inchargePassword"] = "Invalid Book No. !!!";
+            $errors["bookNo"] = "Invalid Book No. !!!";
             $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "issue_errors" => $errors,
                 "issue_data" => [
-                    "memberId" => $memberId
+                    "memberEmail" => $memberEmail
                 ],
                 "transactions" => $transactions
             ]);
@@ -102,7 +104,7 @@ class BookController
             load("Incharge/Dashboard.incharge.transactions",[
                 "issue_errors" => $errors,
                 "issue_data" => [
-                    "memberId" => $memberId
+                    "memberEmail" => $memberEmail
                 ],
                 "transactions" => $transactions
             ]);
@@ -110,7 +112,7 @@ class BookController
         }
         $params=[
             "bookNo" => $bookNo,
-            "memberId" => $memberId,
+            "memberId" => $member->id,
             "inchargeId" => $inchargeId,
         ];
         //-----Insert
@@ -122,7 +124,7 @@ class BookController
             if($update)
             {
                 redirect("/incharge-transactions",[
-                    "issueSuccess" => "Book $bookNo issued by member $memberId Successfully !!!"
+                    "issueSuccess" => "Book $bookNo issued by member $member->id Successfully !!!"
                 ]);
             }
         }
@@ -135,7 +137,7 @@ class BookController
     public function returnBook()
     {
         $bookNo = $_POST["return_book_no"];
-        $memberId = $_POST["return_member_id"];
+        $memberEmail = $_POST["return_member_email"];
         $inchargeId = Session::get("incharge")["Id"];
 
         $errors=[];
@@ -145,9 +147,9 @@ class BookController
         {
             $errors["bookNo"] = "Invalid Book No. !!!";
         }
-        if(!Validation::string($memberId))
+        if(!Validation::email($memberEmail))
         {
-            $errors["memberId"] = "Invalid Member ID !!!";
+            $errors["memberEmail"] = "Invalid Email !!!";
         }
 
         if(!empty($errors))
@@ -157,7 +159,7 @@ class BookController
                 "return_errors" => $errors,
                 "return_data" => [
                     "bookNo" => $bookNo,
-                    "memberId" => $memberId
+                    "memberEmail" => $memberEmail
                 ],
                 "transactions" => $transactions
             ]);
@@ -172,10 +174,11 @@ class BookController
         }
 
         //-----Member Check
-        $member = $this->db->query("SELECT * from member where Id=:memberId",["memberId" => $memberId])->fetch();
+        $member = $this->db->query("SELECT * from member where
+        id = (SELECT MemberId from member_auth where Email = :memberEmail)",["memberEmail" => $memberEmail])->fetch();
         if(!$member)
         {
-            $errors["memberId"] = "Invalid Member ID !!!";
+            $errors["memberId"] = "This Email is not Registered !!!";
             $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "return_errors" => $errors,
@@ -188,15 +191,15 @@ class BookController
         }
 
         //-----Book Check
-        $book = $this->db->query("SELECT * from book_master where BookNo=:bookNo",["bookNo" => $bookNo])->fetch();
+        $book = $this->db->query("SELECT * from book_master where BookNo = :bookNo",["bookNo" => $bookNo])->fetch();
         if(!$book)
         {
-            $errors["inchargePassword"] = "Invalid Book No. !!!";
+            $errors["bookNo"] = "Invalid Book No. !!!";
             $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
             load("Incharge/Dashboard.incharge.transactions",[
                 "return_errors" => $errors,
                 "return_data" => [
-                    "memberId" => $memberId
+                    "memberEmail" => $memberEmail
                 ],
                 "transactions" => $transactions
             ]);
@@ -210,7 +213,7 @@ class BookController
             load("Incharge/Dashboard.incharge.transactions",[
                 "return_errors" => $errors,
                 "return_data" => [
-                    "memberId" => $memberId
+                    "memberEmail" => $memberEmail
                 ],
                 "transactions" => $transactions
             ]);
@@ -218,7 +221,7 @@ class BookController
         }
         $params=[
             "bookNo" => $bookNo,
-            "memberId" => $memberId,
+            "memberId" => $member->id,
             "inchargeId" => $inchargeId
         ];
         $transaction = $this->db->query("SELECT * from transactions
@@ -228,12 +231,6 @@ class BookController
 
         if($transaction)
         {
-            $params = [
-                "bookNo" => $bookNo,
-                "memberId" => $memberId,
-                "inchargeId" => $inchargeId,
-            ];
-
             $update = $this->db->query("UPDATE transactions set ReturnDate = CURRENT_TIMESTAMP
             where BookNo = :bookNo and BorrowerId = :memberId
             and LibrarianId = :inchargeId and ReturnDate is NULL",$params);
@@ -244,7 +241,7 @@ class BookController
                 if($update)
                 {
                     redirect("/incharge-transactions",[
-                        "returnSuccess" => "Book $bookNo returned by member $memberId Successfully !!!"
+                        "returnSuccess" => "Book $bookNo returned by member $member->id Successfully !!!"
                     ]);
                 }
             }
@@ -256,7 +253,7 @@ class BookController
             load("Incharge/Dashboard.incharge.transactions",[
                 "return_errors" => $errors,
                 "return_data" => [
-                    "memberId" => $memberId,
+                    "memberEmail" => $memberEmail,
                     "bookNo" => $bookNo
                 ],
                 "transactions" => $transactions
