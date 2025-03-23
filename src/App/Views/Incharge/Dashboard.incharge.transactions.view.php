@@ -76,7 +76,7 @@ loadComponent("Sidebar", [
                     <tbody>
                         <?php
                         foreach ($transactions as $transaction) {
-                            echo "<tr class='hover:bg-gray-100 dark:hover:bg-gray-600'>
+                            echo "<tr class='hover:bg-gray-400 dark:hover:bg-gray-600'>
                         <td class='border border-black dark:border-gray-600 p-2'>{$transaction->Id}</td>
                         <td class='border border-black dark:border-gray-600 p-2'>{$transaction->BorrowerId}</td>
                         <td class='border border-black dark:border-gray-600 p-2'>{$transaction->BookNo}</td>
