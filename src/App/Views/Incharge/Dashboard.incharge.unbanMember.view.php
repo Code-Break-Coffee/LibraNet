@@ -1,4 +1,5 @@
 <?php
+
 loadComponent("Head");
 loadComponent("Sidebar", [
     "components" => [
@@ -29,18 +30,19 @@ loadComponent("Sidebar", [
     ]
 ]);
 ?>
+
 <div class="flex-1 bg-white dark:bg-[#090A0C] ml-16 text-gray-900 dark:text-white h-screen">
     <?= loadComponent("InchargeDashboard/Header") ?>
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
         <?=loadComponent("InchargeDashboard/GearForms") ?>
-        <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Profile Details</h2>
-            <p class="text-gray-700 dark:text-gray-300"><strong>Name:</strong> John Doe</p>
-            <p class="text-gray-700 dark:text-gray-300"><strong>Email:</strong> johndoe@example.com</p>
-            <p class="text-gray-700 dark:text-gray-300"><strong>Role:</strong> Incharge</p>
+        <div class="flex justify-center items-center min-h-[70vh]">
+            <div class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Unban a Member</h2>
+                <input type="text" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700">Unban</button>
+            </div>
         </div>
     </main>
 </div>
-
 <?= loadComponent("Tail"); ?>

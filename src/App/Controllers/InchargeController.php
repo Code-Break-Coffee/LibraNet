@@ -65,21 +65,21 @@ class InchargeController
         $params=[
             "email" => $email
         ];
-        $incharge = $this->db->query("SELECT * from incharge where email=:email", $params)->fetch();
+        $incharge = $this->db->query("SELECT * from incharge_auth where Email=:email", $params)->fetch();
         if(!$incharge)
         {
             $errors["email"] = "Invalid Email or Password !!!";
             load("Incharge/Signin.incharge",["errors" => $errors]);
             exit;
         }
-        if(!password_verify($password,$incharge->password))
+        if(!password_verify($password,$incharge->Password))
         {
             $errors["email"] = "Invalid Email or Password !!!";
             load("Incharge/Signin.incharge",["errors" => $errors]);
             exit;
         }
         Session::set("incharge",[
-            "Id" => $incharge->Id
+            "Id" => $incharge->InchargeId
         ]);
         redirect("/incharge-dashboard");
     }
@@ -122,6 +122,78 @@ class InchargeController
      */
     public function addIncharge()
     {
+        if($_SERVER["REQUEST_METHOD"] == "POST")
+        {
+            $first_name = $_POST["incharge_firstName"];
+            $middle_name = $_POST["incharge_middleName"] == "" ? null : $_POST["incharge_middleName"];
+            $last_name = $_POST["incharge_LastName"];
+            $email = $_POST["incharge_email"];
+            $phone = $_POST["incharge_phoneNo"];
+            $incharge_designation = $_POST["incharge_designation"];
+            $tier = $_POST["incharge_tier"];
+            $errors=[];
+            if(!Validation::string($first_name,3,50))
+            {
+                $errors["first_name"] = "First Name must be between 3 and 50 characters !!!";
+            }
+            if(!Validation::string($middle_name,0,50) && $middle_name != null)
+            {
+                $errors["middle_name"] = "Middle Name must be between 3 and 50 characters !!!";
+            }
+            if(!Validation::string($last_name,3,50))
+            {
+                $errors["last_name"] = "Last Name must be between 3 and 50 characters !!!";
+            }
+            if(!Validation::email($email))
+            {
+                $errors["email"] = "Invalid Email !!!";
+            }
+            if(!Validation::phone($phone))
+            {
+                $errors["phone"] = "Invalid Phone Number !!!";
+            }
+            if(!Validation::string($incharge_designation,3,50))
+            {
+                $errors["incharge_designation"] = "Designation must be between 3 and 50 characters !!!";
+            }
+            if(!empty($errors))
+            {
+                load("Incharge/Dashboard.incharge.addIncharge",["errors" => $errors]);
+                exit;
+            }
+            $params=[
+                "email" => $email
+            ];
+            $incharge_exists = $this->db->query("SELECT * from incharge_auth where Email=:email", $params)->fetch();
+            $user_exists = $this->db->query("SELECT * from member_auth where Email=:email", $params)->fetch();
+            if($incharge_exists || $user_exists)
+            {
+                $errors["email"] = "Email already exists !!!";
+                load("Incharge/Dashboard.incharge.addIncharge",["errors" => $errors]);
+                exit;
+            }
+            $params=[
+                "FName" => $first_name,
+                "MName" => $middle_name,
+                "LName" => $last_name,
+                "PhoneNo" => $phone,
+                "Designation" => $incharge_designation,
+                "Tier" => $tier,
+                "Remark" => null,
+            ];
+            $this->db->query("INSERT into incharge(FName,MName,LName,PhoneNo,Designation,Tier,Remark) values(:FName,:MName,:LName,:PhoneNo,:Designation,:Tier,:Remark)",$params);
+            $random_password = random_int(10000000,99999999);
+            $current_incharge=$this->db->conn->lastInsertId();
+            $new_params=[
+                "InchargeId" => $current_incharge,
+                "email" => $email,
+                "password" => password_hash($random_password,PASSWORD_DEFAULT)
+            ];
+            $this->db->query("INSERT into incharge_auth(InchargeId,Email,Password) values(:InchargeId,:email,:password)",$new_params);
+            EmailController::sendEmail($email,"Incharge Account Created Successfully","Your Incharge Account has been created.","<h1>Your Password is $random_password. Please change your password after logging in.</h1>");
+            redirect("/add-incharge",["success" => "Incharge Added Successfully !!!"]);
+            exit;
+        }
         load("Incharge/Dashboard.incharge.addIncharge");
     }
 
@@ -151,6 +223,13 @@ class InchargeController
     {
         load("Incharge/Dashboard.incharge.banMember");
     }
-
-
+    
+    /**
+     * Incharge Profile Unban Member
+     * @return void
+     */
+    public function unbanMember()
+    {
+        load("Incharge/Dashboard.incharge.unbanMember");
+    }
 }

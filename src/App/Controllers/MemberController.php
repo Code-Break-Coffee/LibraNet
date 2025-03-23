@@ -60,7 +60,7 @@ class MemberController
         $params=[
             "Email" => $email
         ];
-        $member = $this->db->query("SELECT * from member where Email = :Email",$params)->fetch();
+        $member = $this->db->query("SELECT * from member_auth where Email = :Email",$params)->fetch();
         if(!$member)
         {
             $errors["email"] = "Invalid Email or Password !!!";
@@ -74,7 +74,7 @@ class MemberController
             exit;
         }
         Session::set("member",[
-            "Id" => $member->Id,
+            "Id" => $member->member_id,
         ]);
         redirect("/member-dashboard");
     }
@@ -104,8 +104,8 @@ class MemberController
             {
                 $errors["email"] = "Invalid Email !!!";
             }
-            $user_exists= $this->db->query('select * from member where Email=:email',["email"=>$email])->fetch();
-            $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
+            $user_exists= $this->db->query('select * from member_auth where Email=:email',["email"=>$email])->fetch();
+            $admin_exists = $this->db->query("select * from incharge_auth where Email=:email",["email"=>$email])->fetch();
             if(!$user_exists && !$admin_exists)
             {
                 $errors["email"]="Email does not exists !!!";
@@ -188,8 +188,8 @@ class MemberController
             {
                 $errors["middle_name"] = "Middle Name should be atmost 15 length!!!";
             }
-            $memeber_exists = $this->db->query("select * from member where email=:email",["email"=>$email])->fetch();
-            $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
+            $memeber_exists = $this->db->query("select * from member_auth where Email=:email",["email"=>$email])->fetch();
+            $admin_exists = $this->db->query("select * from incharge_auth where Email=:email",["email"=>$email])->fetch();
             if($memeber_exists || $admin_exists)
             {
                 $errors["email"]="Email already exists !!!";
@@ -249,22 +249,23 @@ class MemberController
         $errors = [];
         $show_otp_input=false;
         if(empty($errors)){
-            $user_exists = $this->db->query("select * from member where email=:email",["email"=>$email])->fetch();
-            $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
+            $user_exists = $this->db->query("select * from member_auth where Email=:email",["email"=>$email])->fetch();
+            $admin_exists = $this->db->query("select * from incharge_auth where Email=:email",["email"=>$email])->fetch();
             $unverfied_exists= $this->db->query("select * from unverified where email=:email",["email"=>$email])->fetch();
             if($user_exists || $admin_exists){
                 $errors["email"]="Email already exists !!!";
             }
             else if(password_verify($otp,$unverfied_exists->code))
             {
-                $this->db->query("insert into member(FName,MName,LName,PhoneNo,Email,Password,Address,Affiliation,Remark,Status) values(:first_name,:middle_name,:last_name,:phone,:email,:password,:address,:affilate,:remark,:status)",["email"=>$email,"password"=>password_hash($password,PASSWORD_BCRYPT),"first_name"=>$first_name,"middle_name"=>$middle_name,"last_name"=>$last_name,"phone"=>$phone,"address"=>$address,"affilate"=>"","remark"=>"","status"=>"Active"]);
+                $this->db->query("insert into member(FName,MName,LName,PhoneNo,Address,Affiliation,Remark) values(:first_name,:middle_name,:last_name,:phone,:address,:affilate,:remark)",["first_name"=>$first_name,"middle_name"=>$middle_name,"last_name"=>$last_name,"phone"=>$phone,"address"=>$address,"affilate"=>"","remark"=>""]);
+                $curr_member_id=$this->db->conn->lastInsertId();
+                $this->db->query("insert into member_auth(MemberId,Email,Password,Status) values(:member_id,:email,:password,:status)",["member_id"=>$curr_member_id,"email"=>$email,"password"=>password_hash($password,PASSWORD_BCRYPT),"status"=>null]);
                 $this->db->query("delete from unverified where email=:email",["email"=>$email]);
                 EmailController::sendEmail($email,"Welcome to LibraNet !!!","Welcome to LibraNet","<h1>SignIn Completed Succesfully !!!</h1>");
                 redirect("/");
             }
             else
             {
-
                 $errors["otp"]="Invalid OTP !!!";
                 $show_otp_input=true;
             }
@@ -309,15 +310,16 @@ class MemberController
             {
                 $errors["password"] = "Password and Confirm Password should be same !!!";
             }
-            $user_exists= $this->db->query('select * from unverified where email=:email',["email"=>$email])->fetch();
-            $admin_exists = $this->db->query("select * from incharge where Email=:email",["email"=>$email])->fetch();
-            if($user_exists)
+            $unverified_exists= $this->db->query('select * from unverified where email=:email',["email"=>$email])->fetch();
+            $user_exists = $this->db->query("select * from member_auth where Email=:email",["email"=>$email])->fetch();
+            $admin_exists = $this->db->query("select * from incharge_auth where Email=:email",["email"=>$email])->fetch();
+            if($user_exists && $unverified_exists)
             {
-                $sql_query = "update member set Password=:password where Email=:email";
+                $sql_query = "update member_auth set Password=:password where Email=:email";
             }
-            else if($admin_exists)
+            else if($admin_exists && $unverified_exists)
             {
-                $sql_query = "update incharge set Password=:password where Email=:email";
+                $sql_query = "update incharge_auth set Password=:password where Email=:email";
             }
             else
             {
@@ -328,9 +330,15 @@ class MemberController
                 exit;
             }
 
-            
-            if(password_verify($otp,$user_exists->code)) {
-                $this->db->query("update member set Password=:password where Email=:email",["password"=>password_hash($password,PASSWORD_BCRYPT),"email"=>$email]);
+            if(isset($user_exists) && password_verify($otp,$unverified_exists->code) && $user_exists!=false) {
+                $this->db->query("update member_auth set Password=:password where email=:email",["password"=>password_hash($password,PASSWORD_BCRYPT),"email"=>$email]);
+                $this->db->query("delete from unverified where email=:email",["email"=>$email]);
+                EmailController::sendEmail($email,"Password Changed !!!","Password has been changed !!!","<h1>Your Password has been changed for LibraNet !!!</h1>");
+                redirect("/");
+            }
+            if(isset($admin_exists) && password_verify($otp,$unverified_exists->code) && $admin_exists!=false) {
+                
+                $this->db->query("update incharge_auth set Password=:password where Email=:email",["password"=>password_hash($password,PASSWORD_BCRYPT),"email"=>$email]);
                 $this->db->query("delete from unverified where email=:email",["email"=>$email]);
                 EmailController::sendEmail($email,"Password Changed !!!","Password has been changed !!!","<h1>Your Password has been changed for LibraNet !!!</h1>");
                 redirect("/");
