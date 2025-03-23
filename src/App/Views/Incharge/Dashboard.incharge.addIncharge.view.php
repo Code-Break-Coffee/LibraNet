@@ -36,7 +36,7 @@ loadComponent("Sidebar", [
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
         <?=loadComponent("InchargeDashboard/GearForms") ?>
         <?=isset($errors) ? loadComponent("ErrorAlert",["errors"=>$errors ?? []]) : ""?>
-        <?=isset($errors) ? loadComponent("WarningAlert",["warnings" => $success ?? []]) : ""?>
+        <?=isset($success) ? loadComponent("SuccessAlert",["msg" => $success ?? []]) : ""?>
         <div class="flex justify-center items-center min-h-[70vh]">
             <form class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-lg" action="/add-incharge" method="post">
                 <center>
@@ -50,9 +50,9 @@ loadComponent("Sidebar", [
                 <input required type="text" name="incharge_designation" placeholder="Incharge Designation" class="w-full mb-4 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
                 <select required name="incharge_tier" class="border dark:border-gray-600 dark:bg-gray-700 dark:text-white mb-4 p-2 col-start-1 row-start-1 w-full appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 sm:text-sm/6">
                     <option value="">Select Tier</option>
-                    <option value="1">Tier 1</option>
-                    <option value="2">Tier 2</option>
-                    <option value="3">Tier 3</option>
+                    <option value="1" <?= $Tier < 1 ? "disabled" : "" ?>>Tier 1</option>
+                    <option value="2" <?= $Tier < 2 ? "disabled" : "" ?>>Tier 2</option>
+                    <option value="3" <?= $Tier < 3 ? "disabled" : "" ?>>Tier 3</option>
                 </select>
                 <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full hover:bg-blue-700">Add</button>
             </form>
