@@ -38,7 +38,7 @@ loadComponent("ThemeToggle", ["classes" => "absolute top-3 left-4"]);
       </button>
     </form>
     <p class="mt-4 text-center text-sm text-black dark:text-d-3">
-      Forgot password? <a href="/incharge-forgot-password" class="text-black dark:text-d-3">Reset here</a>
+      Forgot password? <a href="/member-forgot-password" class="text-black dark:text-d-3">Reset here</a>
     </p>
   </div>
 </div>
