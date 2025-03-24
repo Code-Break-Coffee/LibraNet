@@ -43,3 +43,8 @@ $router->post("/incharge-transactions","BookController@issueBook",["auth-incharg
 
 //----Books
 $router->put("/incharge-transactions","BookController@returnBook",["auth-incharge"]);
+
+//------------------------------------------------------------------Delete Requests
+
+//----Incharge
+$router->delete("/remove-incharge","InchargeController@deleteIncharge",["auth-incharge"]);

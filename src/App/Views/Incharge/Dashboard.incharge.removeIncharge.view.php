@@ -35,16 +35,19 @@ loadComponent("Sidebar", [
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
         <?=loadComponent("InchargeDashboard/GearForms") ?>
+        <?=isset($errors) ? loadComponent("ErrorAlert",["errors"=>$errors ?? []]) : ""?>
+        <?=isset($_GET["success"]) ? loadComponent("SuccessAlert",["msg" => $_GET["success"] ?? ""]) : ""?>
         <div class="flex justify-center items-center min-h-[70vh]">
-            <div class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md min-w-[30vw]">
+            <form action="/remove-incharge" method="POST" class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md min-w-[30vw]">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Remove Incharge</h2>
-                <input type="email" name="incharge_email" placeholder="Incharge Email" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input type="hidden" name="_method" value="DELETE"/>
+                <input required type="tel" name="incharge_id" placeholder="Incharge ID [Not Yours]" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
                 <div class="relative">
-                    <input type="password" name="incharge_password" placeholder="Your Password" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                    <input required type="password" name="incharge_password" placeholder="Your Password" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
                     <?=loadComponent("EyeIcons",["position" => "right-2 top-3"]) ?>
                 </div>
                 <button type="submit" class="bg-red-600 text-white px-4 py-2 rounded w-full hover:bg-red-700">Remove</button>
-            </div>
+            </form>
         </div>
     </main>
 </div>
