@@ -227,6 +227,64 @@ class InchargeController
     }
 
     /**
+     * Incharge Profile Delete Incharge
+     * @return void
+     */
+    public function deleteIncharge()
+    {
+        $deleterId = Session::get("incharge")["Id"];
+        $deleterTier = $this->getInchargeTier();
+        $incharge_id = $_POST["incharge_id"];
+        $deleterPassword = $_POST["incharge_password"];
+        $errors=[];
+
+        if(!Validation::string($deleterPassword,8,50))
+        {
+            $errors["password"] = "Password must be between 8 and 50 characters !!!";
+            load("Incharge/Dashboard.incharge.removeIncharge",["errors" => $errors]);
+            exit;
+        }
+
+        if($incharge_id == $deleterId)
+        {
+            $errors["incharge_id"] = "You can't delete yourself !!!";
+            load("Incharge/Dashboard.incharge.removeIncharge",["errors" => $errors]);
+            exit;
+        }
+
+        $deleter = $this->db->query("SELECT * from incharge where
+        Id = :id",["id" => $deleterId])->fetch();
+        if(!$deleter)
+        {
+            redirect("/incharge-dashboard");
+        }
+        if(!password_verify($deleterPassword,$this->db->query("SELECT Password from incharge_auth 
+        where InchargeId = :id",["id" => $deleterId])->fetch()->Password))
+        {
+            $errors["password"] = "Invalid Password !!!";
+            load("Incharge/Dashboard.incharge.removeIncharge",["errors" => $errors]);
+            exit;
+        }
+        $incharge = $this->db->query("SELECT * from incharge where Id = :id",["id" => $incharge_id])->fetch();
+        if(!$incharge)
+        {
+            $errors["incharge_id"] = "Incharge doesn't exist !!!";
+            load("Incharge/Dashboard.incharge.removeIncharge",["errors" => $errors]);
+            exit;
+        }
+        if($deleterTier < $this->db->query("SELECT Tier from incharge where Id = :id",["id" => $incharge_id])->fetch()->Tier)
+        {
+            $errors["incharge_id"] = "You can't delete an Incharge of higher Tier !!!";
+            load("Incharge/Dashboard.incharge.removeIncharge",["errors" => $errors]);
+            exit;
+        }
+
+        $this->db->query("DELETE from incharge where Id = :id",["id" => $incharge_id]);
+
+        redirect("/remove-incharge",["success" => "Incharge Deleted Successfully !!!"]);
+    }
+
+    /**
      * Incharge Profile Change Profile
      * @return void
      */
