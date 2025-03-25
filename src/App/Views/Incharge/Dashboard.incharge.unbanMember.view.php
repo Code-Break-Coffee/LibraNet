@@ -36,12 +36,15 @@ loadComponent("Sidebar", [
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
         <?=loadComponent("InchargeDashboard/GearForms") ?>
+        <?=isset($errors) ? loadComponent("ErrorAlert",["errors"=>$errors ?? []]) : ""?>
+        <?=isset($_GET["success"]) ? loadComponent("SuccessAlert",["msg" => $_GET["success"] ?? ""]) : ""?>
         <div class="flex justify-center items-center min-h-[70vh]">
-            <div class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <form method="post" action="/incharge-unban" class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Unban a Member</h2>
-                <input type="text" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input type="hidden" name="_method" value="PUT"/>
+                <input type="tel" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700">Unban</button>
-            </div>
+            </form>
         </div>
     </main>
 </div>

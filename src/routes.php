@@ -34,12 +34,19 @@ $router->post("/add-member","MemberController@addMember",["guest-member"]);
 //----Incharge
 $router->post("/incharge-signin","InchargeController@inchargeSignin",["guest-incharge"]);
 $router->get("/incharge-signout","InchargeController@inchargeSignout",["auth-incharge"]);
+
+//----Incharge Dashboard
 $router->post("/add-incharge","InchargeController@addIncharge",["auth-incharge"]);
 
 //----Books
 $router->post("/incharge-transactions","BookController@issueBook",["auth-incharge"]);
 
 //------------------------------------------------------------------Put Requests
+
+//----Incharge Dashboard
+$router->put("/incharge-ban","InchargeController@inchargeBan",["auth-incharge"]);
+$router->put("/incharge-unban","InchargeController@inchargeUnban",["auth-incharge"]);
+
 
 //----Books
 $router->put("/incharge-transactions","BookController@returnBook",["auth-incharge"]);
