@@ -36,11 +36,14 @@ loadComponent("Sidebar", [
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
         <?=loadComponent("InchargeDashboard/GearForms") ?>
+        <?=isset($errors) ? loadComponent("ErrorAlert",["errors"=>$errors ?? []]) : ""?>
+        <?=isset($_GET["success"]) ? loadComponent("SuccessAlert",["msg" => $_GET["success"] ?? ""]) : ""?>
         <div class="flex justify-center items-center min-h-[70vh]">
-            <form method="post" class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md min-w-[30vw]">
+            <form action="/incharge-ban" method="POST" class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md min-w-[30vw]">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Ban a Member</h2>
-                <input type="hidden" name="_method"/>
-                <input required type="text" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input type="hidden" name="_method" value="PUT"/>
+                <input required type="tel" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <textarea required name="ban_reason" placeholder="Ban Reason" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white"><?= $ban_reason ?? "" ?></textarea>
                 <div class="relative">
                     <input required type="password" name="incharge_password" placeholder="Your Password" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
                     <?=loadComponent("EyeIcons",["position" => "right-2 top-3"]) ?>

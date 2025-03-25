@@ -113,7 +113,9 @@ class InchargeController
      */
     public function inchargeProfile()
     {
-        load("Incharge/Dashboard.incharge.profile");
+        $incharge_id = Session::get("incharge")["Id"];
+        $incharge = $this->db->query("SELECT * from incharge where Id = :id",["id" => $incharge_id])->fetch();
+        load("Incharge/Dashboard.incharge.profile",["incharge" => $incharge]);
     }
 
     /**
@@ -303,11 +305,126 @@ class InchargeController
     }
     
     /**
+     * Incharge Profile Ban Member
+     * @return void
+     */
+    public function inchargeBan()
+    {
+        $member_id = $_POST["member_id"];
+        $incharge_id = Session::get("incharge")["Id"];
+        $incharge_password = $_POST["incharge_password"];
+        $ban_reason = $_POST["ban_reason"];
+
+        $errors=[];
+        if(!Validation::string($incharge_password,8,50))
+        {
+            $errors["password"] = "Password must be between 8 and 50 characters !!!";
+        }
+        if(!Validation::string($ban_reason,3,100))
+        {
+            $errors["ban_reason"] = "Ban Reason must be between 3 and 100 characters !!!";
+        }
+        if(!empty($errors))
+        {
+            load("Incharge/Dashboard.incharge.banMember",[
+                "errors" => $errors,
+                "ban_reason" => $ban_reason
+            ]);
+            exit;
+        }
+        //Incharge Check
+        $incharge = $this->db->query("SELECT * from incharge where Id = :id",["id" => $incharge_id])->fetch();
+        if(!$incharge)
+        {
+            redirect("/incharge-dashboard");
+        }
+        //Member Check
+        $member = $this->db->query("SELECT * from member where Id = :id",["id" => $member_id])->fetch();
+        if(!$member)
+        {
+            $errors["member_id"] = "Member doesn't exist !!!";
+            load("Incharge/Dashboard.incharge.banMember",[
+                "errors" => $errors,
+                "ban_reason" => $ban_reason
+            ]);
+            exit;
+        }
+        //Password Check
+        if(!password_verify($incharge_password,$this->db->query("SELECT Password from incharge_auth where InchargeId = :id",["id" => $incharge_id])->fetch()->Password))
+        {
+            $errors["password"] = "Invalid Password !!!";
+            load("Incharge/Dashboard.incharge.banMember",[
+                "errors" => $errors,
+                "ban_reason" => $ban_reason
+            ]);
+            exit;
+        }
+        //Ban Check
+        $banned = $this->db->query("SELECT * from member_auth where MemberId = :id",["id" => $member_id])->fetch();
+        if($banned->Status === "Banned")
+        {
+            $errors["member_id"] = "Member is already banned !!!";
+            load("Incharge/Dashboard.incharge.banMember",[
+                "errors" => $errors,
+                "ban_reason" => $ban_reason
+            ]);
+            exit;
+        }
+        $this->db->query("UPDATE member_auth set Status = 'Banned', BanReason = :ban_reason
+        where MemberId = :id",["id" => $member_id,"ban_reason" => $ban_reason]);
+        EmailController::sendEmail($banned->Email,"You have been banned","You have been banned for $ban_reason","<h1>You have been banned for $ban_reason</h1>");
+        redirect("/ban-member",["success" => "Member Banned Successfully !!!"]);
+    }
+
+    /**
      * Incharge Profile Unban Member
      * @return void
      */
     public function unbanMember()
     {
         load("Incharge/Dashboard.incharge.unbanMember");
+    }
+
+    /**
+     * Incharge Profile Unban Member
+     * @return void
+     */
+    public function inchargeUnban()
+    {
+        $member_id = $_POST["member_id"];
+        $incharge_id = Session::get("incharge")["Id"];
+
+        $errors=[];
+
+        //Incharge Check
+        $incharge = $this->db->query("SELECT * from incharge where Id = :id",["id" => $incharge_id])->fetch();
+        if(!$incharge)
+        {
+            redirect("/incharge-dashboard");
+        }
+        //Member Check
+        $member = $this->db->query("SELECT * from member where Id = :id",["id" => $member_id])->fetch();
+        if(!$member)
+        {
+            $errors["member_id"] = "Member doesn't exist !!!";
+            load("Incharge/Dashboard.incharge.unbanMember",[
+                "errors" => $errors
+            ]);
+            exit;
+        }
+        //Unban Check
+        $banned = $this->db->query("SELECT * from member_auth where MemberId = :id",["id" => $member_id])->fetch();
+        if($banned->Status != "Banned")
+        {
+            $errors["member_id"] = "Member is already unbanned !!!";
+            load("Incharge/Dashboard.incharge.unbanMember",[
+                "errors" => $errors
+            ]);
+            exit;
+        }
+        $this->db->query("UPDATE member_auth set Status = 'Active', BanReason = null
+        where MemberId = :id",["id" => $member_id]);
+        EmailController::sendEmail($banned->Email,"You have been unbanned","You have been unbanned","<h1>You have been unbanned</h1>");
+        redirect("/unban-member",["success" => "Member Unbanned Successfully !!!"]);
     }
 }

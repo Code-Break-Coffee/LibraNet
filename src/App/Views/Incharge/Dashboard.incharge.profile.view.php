@@ -33,13 +33,31 @@ loadComponent("Sidebar", [
     <?= loadComponent("InchargeDashboard/Header") ?>
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
-        <?=loadComponent("InchargeDashboard/GearForms") ?>
-        <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
-            <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Profile Details</h2>
-            <p class="text-gray-700 dark:text-gray-300"><strong>Name:</strong> John Doe</p>
-            <p class="text-gray-700 dark:text-gray-300"><strong>Email:</strong> johndoe@example.com</p>
-            <p class="text-gray-700 dark:text-gray-300"><strong>Role:</strong> Incharge</p>
+        <?= loadComponent("InchargeDashboard/GearForms") ?>
+        <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
+            <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-300 border-b border-gray-300 dark:border-gray-600 pb-2">Profile Details</h2>
+            <div class="space-y-2">
+                <p class="flex items-center text-gray-700 dark:text-gray-300">
+                    <span class="font-semibold w-32">First Name:</span> <span class="text-gray-900 dark:text-gray-100"><?= $incharge->FName ?></span>
+                </p>
+                <p class="flex items-center text-gray-700 dark:text-gray-300">
+                    <span class="font-semibold w-32">Middle Name:</span> <span class="text-gray-900 dark:text-gray-100"><?= $incharge->MName ?? "NULL" ?></span>
+                </p>
+                <p class="flex items-center text-gray-700 dark:text-gray-300">
+                    <span class="font-semibold w-32">Last Name:</span> <span class="text-gray-900 dark:text-gray-100"><?= $incharge->LName ?></span>
+                </p>
+                <p class="flex items-center text-gray-700 dark:text-gray-300">
+                    <span class="font-semibold w-32">Phone No:</span> <span class="text-gray-900 dark:text-gray-100"><?= $incharge->PhoneNo ?></span>
+                </p>
+                <p class="flex items-center text-gray-700 dark:text-gray-300">
+                    <span class="font-semibold w-32">Designation:</span> <span class="text-gray-900 dark:text-gray-100"><?= $incharge->Designation ?></span>
+                </p>
+                <p class="flex items-center text-gray-700 dark:text-gray-300">
+                    <span class="font-semibold w-32">Tier:</span> <span class="text-gray-900 dark:text-gray-100"><?= $incharge->Tier ?></span>
+                </p>
+            </div>
         </div>
+
     </main>
 </div>
 

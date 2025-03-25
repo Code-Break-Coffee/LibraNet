@@ -1,11 +1,14 @@
 Zakie-----
 Frontend for book Manipulation and Search
-Blackend for Creating new Incharge
-Signup Signin Forgot Password ReWork
 
 //----------Dashboard
-Tanishq----
-DashBoard Query ReWork
+
+//////Incharge
+Tanishq---
+ban unban
+change Details
+pagination
+Session clear on 6hrs timeout
 
 Transactions-
     Issue
@@ -22,6 +25,10 @@ Profile
 Search
     Search Member, Incharge and Book
 
+/////Member
+Search Book
+Change Profile
+DashBoard Statistics
 
 //-----Optional
 Payment
