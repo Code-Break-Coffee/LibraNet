@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Framework\Validation;
 use Framework\Database;
 use Framework\Session;
+use Symfony\Component\Mime\Email;
 
 class InchargeController
 {
@@ -426,5 +427,71 @@ class InchargeController
         where MemberId = :id",["id" => $member_id]);
         EmailController::sendEmail($banned->Email,"You have been unbanned","You have been unbanned","<h1>You have been unbanned</h1>");
         redirect("/unban-member",["success" => "Member Unbanned Successfully !!!"]);
+    }
+
+    /**
+     * Incharge Change Password Page
+     * @return void
+     */
+    public function changePass()
+    {
+        load("Incharge/Dashboard.incharge.changePassword");
+    }
+
+    /**
+     * Incharge Change Password
+     * @return void
+     */
+    public function changePassword()
+    {
+        $curr_pass = $_POST["curr_pass"];
+        $new_pass = $_POST["new_pass"];
+        $conf_pass = $_POST["conf_pass"];
+
+        $errors=[];
+        if(!Validation::string($curr_pass,8,50))
+        {
+            $errors["curr_pass"] = "Current Password must be between 8 and 50 characters !!!";
+        }
+        if(!Validation::string($new_pass,8,50))
+        {
+            $errors["new_pass"] = "New Password must be between 8 and 50 characters !!!";
+        }
+        if(!Validation::string($conf_pass,8,50))
+        {
+            $errors["conf_pass"] = "Confirm Password must be between 8 and 50 characters !!!";
+        }
+        if(!Validation::match($new_pass,$conf_pass))
+        {
+            $errors["conf_pass"] = "New Password and Confirm Password must be same !!!";
+        }
+        if(Validation::match($curr_pass,$new_pass))
+        {
+            $errors["new_pass"] = "New Password must be different from Current Password !!!";
+        }
+        if(!empty($errors))
+        {
+            load("Incharge/Dashboard.incharge.changePassword",[
+                "errors" => $errors
+            ]);
+            exit;
+        }
+        $incharge_id = Session::get("incharge")["Id"];
+        $incharge = $this->db->query("SELECT * from incharge_auth where InchargeId = :id",["id" => $incharge_id])->fetch();
+        if(!$incharge)
+        {
+            redirect("/incharge-dashboard");
+        }
+        if(!password_verify($curr_pass,$incharge->Password))
+        {
+            $errors["curr_pass"] = "Invalid Current Password !!!";
+            load("Incharge/Dashboard.incharge.changePassword",[
+                "errors" => $errors
+            ]);
+            exit;
+        }
+        $this->db->query("UPDATE incharge_auth set Password = :password where InchargeId = :id",["id" => $incharge_id,"password" => password_hash($new_pass,PASSWORD_BCRYPT)]);
+        EmailController::sendEmail($incharge->Email,"Password Changed Successfully","Your Password has been changed successfully","<h1>Your Password has been changed successfully</h1>");
+        redirect("/incharge-change-password",["success" => "Password Changed Successfully !!!"]);
     }
 }

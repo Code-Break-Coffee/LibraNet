@@ -5,7 +5,10 @@
     const password = document.querySelector('input[type="password"]');
     const eyeConfirm = document.getElementById('eye-confirm');
     const eyeSlashConfirm = document.getElementById('eye-slash-confirm');
-    const passwordConfirm = document.querySelectorAll('input[type="password"]')[1];
+    const passwordConfirm = document.querySelectorAll('input[type="password"]')[2] ?? document.querySelectorAll('input[type="password"]')[1];
+    const eyeNew = document.getElementById('eye-new');
+    const eyeSlashNew = document.getElementById('eye-slash-new');
+    const passwordNew = document.querySelectorAll('input[type="password"]')[1];
 
     if (eye && eyeSlash && password)
     {
@@ -38,6 +41,23 @@
             eyeSlashConfirm.classList.add("hidden");
             eyeConfirm.classList.remove("hidden");
             passwordConfirm.type = "text";
+        });
+    }
+
+    if(eyeNew && eyeSlashNew && passwordNew)
+    {
+        eyeNew.addEventListener("click", () =>
+        {
+            eyeNew.classList.add("hidden");
+            eyeSlashNew.classList.remove("hidden");
+            passwordNew.type = "password";
+        });
+
+        eyeSlashNew.addEventListener("click", () =>
+        {
+            eyeSlashNew.classList.add("hidden");
+            eyeNew.classList.remove("hidden");
+            passwordNew.type = "text";
         });
     }
 
