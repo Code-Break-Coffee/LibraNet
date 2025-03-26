@@ -42,7 +42,7 @@ loadComponent("Sidebar", [
             <form method="post" action="/incharge-unban" class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Unban a Member</h2>
                 <input type="hidden" name="_method" value="PUT"/>
-                <input type="tel" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input type="tel" value='<?=(isset($_GET["member_id"]))?$_GET["member_id"]: ''?>' name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700">Unban</button>
             </form>
         </div>
