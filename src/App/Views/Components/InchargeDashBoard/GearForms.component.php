@@ -3,6 +3,7 @@
     <a href="/add-incharge" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Add Incharge</a>
     <a href="/remove-incharge" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Remove Incharge</a>
     <a href="/incharge-change-profile" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Change Profile</a>
+    <a href="/incharge-change-password" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Change Password</a>
     <a href="/ban-member" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Ban Member</a>
     <a href="/unban-member" class="block px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-700">Unban Member</a>
 </div>
