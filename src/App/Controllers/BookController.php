@@ -261,4 +261,61 @@ class BookController
             exit;
         }
     }
+
+
+    /**
+     * Delete a Book
+     * @return void
+     */
+    public function deleteBook(){
+        if($_SERVER["REQUEST_METHOD"]=="POST"){
+            $bookNo = $_POST["book_no"];
+            $errors=[];
+            $transactions=[];
+    
+            if(!Validation::string($bookNo))
+            {
+                $errors["bookNo"] = "Invalid Book No. !!!";
+            }
+    
+            if(!empty($errors))
+            {
+                load("Incharge/Dashboard.incharge.DeleteBook",[
+                    "delete_errors" => $errors,
+                ]);
+                exit;
+            }
+    
+    
+            //-----Book Check
+            $book = $this->db->query("SELECT * from book_master where BookNo = :bookNo",["bookNo" => $bookNo])->fetch();
+            if(!$book)
+            {
+                $errors["bookNo"] = "Invalid Book No. !!!";
+                load("Incharge/Dashboard.incharge.DeleteBook",[
+                    "delete_errors" => $errors,
+                ]);
+                exit;
+            }
+    
+            if(strtoupper($book->Status) === "ISSUED")
+            {
+                $errors["bookNo"] = "Book is not Available right now !!!";
+                load("Incharge/Dashboard.incharge.DeleteBook",[
+                    "delete_errors" => $errors,
+                ]);
+                exit;
+            }
+    
+            $delete = $this->db->query("DELETE from book_master where BookNo = :bookNo",["bookNo" => $bookNo]);
+            if($delete)
+            {
+                load("Incharge/Dashboard.incharge.DeleteBook",[
+                    "success" => "Book $bookNo Deleted Successfully !!!"
+                ]);
+                exit;
+            }
+        }
+        load("Incharge/Dashboard.incharge.DeleteBook");
+    }
 }

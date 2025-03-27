@@ -31,10 +31,10 @@ loadComponent("Sidebar", [
 ?>
 <div class="flex-1 bg-white dark:bg-[#090A0C] ml-16 text-gray-900 dark:text-white h-screen">
     <?= loadComponent("InchargeDashboard/Header") ?>
-    <main class="container mx-auto px-4 py-8 relative">
+    <main class="container mx-auto px-4 py-6 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300">InCharge Search</h1>
-        <?php if (!$search_type || empty($members) && empty($books) && empty($incharges)) : ?>
-        <div class="flex justify-center items-center min-h-[100vh]">
+        <?php if ( !isset($search_type) || empty($members) && empty($books) && empty($incharges)) : ?>
+        <div class="flex justify-center items-center mt-20 pt-20">
             <div class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <?= isset($search_errors) ? loadComponent("ErrorAlert", ["errors" => $search_errors ?? []]) : "" ?>
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Search</h2>
@@ -44,14 +44,13 @@ loadComponent("Sidebar", [
                         <option value="" selected>Select</option>
                         <option value="member">Member</option>
                         <option value="book">Book</option>
-                        <option value="incharge">Incharge</option>
                     </select>
                     <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700">Search</button>
                 </form>
             </div>
             <?php endif; ?>
             <div>
-            <?php if ($search_type == "member" && !empty($members)) : ?>
+            <?php if (isset($search_type) && $search_type == "member" && !empty($members)) : ?>
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Search Results</h2>
                     <a href="/incharge-search"><button class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Close</button></a>
@@ -96,7 +95,7 @@ loadComponent("Sidebar", [
                     </tbody>
                 </table>
 
-            <?php elseif ($search_type == "book" && !empty($books)) : ?>
+            <?php elseif (isset($search_type) && $search_type == "book" && !empty($books)) : ?>
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Search Results</h2>
                     <a href="/incharge-search"><button class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Close</button></a>
@@ -110,8 +109,9 @@ loadComponent("Sidebar", [
                             <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 ">Author 2</th>
                             <th class="border border-gray-300 dark:border-gray-600 px-4 py-2 ">Author 3</th>
                             <th class="border border-gray-300 dark:border-gray-600 px-4 py-2">Edition</th>
-                            <th class="border border-gray-300 dark:border-gray-600 px-4 py-2">Category</th>
+                            <th class="border border-gray-300 dark:border-gray-600 px-4 py-2">Rating</th>
                             <th class="border border-gray-300 dark:border-gray-600 px-4 py-2">Status</th>
+                            <th class="border border-gray-300 dark:border-gray-600 px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -123,14 +123,26 @@ loadComponent("Sidebar", [
                                 <td class="border border-gray-300 dark:border-gray-600 px-4 py-2"><?= $result->Author2 ?></td>
                                 <td class="border border-gray-300 dark:border-gray-600 px-4 py-2"><?= $result->Author3 ?></td>
                                 <td class="border border-gray-300 dark:border-gray-600 px-4 py-2"><?= $result->Edition ?></td>
-                                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2"><?= $result->Category ?></td>
+                                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2"><?= $result->Rating ?></td>
                                 <td class="border border-gray-300 dark:border-gray-600 px-4 py-2"><?= $result->Status ?></td>
+                                <td class="border border-gray-300 dark:border-gray-600 px-4 py-2">
+                                    <a href="/incharge-delete-book?book_no=<?= $result->BookNo ?>">
+                                        <button class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">
+                                            Delete
+                                        </button>
+                                    </a>
+                                    <a href="/incharge-edit-book?book_no=<?= $result->BookNo ?>">
+                                        <button class="focus:outline-none text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-900">
+                                            Edit
+                                        </button>
+                                    </a>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
                 </table>
 
-            <?php elseif ($search_type == "incharge" && !empty($incharges)) : ?>
+            <?php elseif (isset($search_type) && $search_type == "incharge" && !empty($incharges)) : ?>
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Search Results</h2>
                     <a href="/incharge-search"><button class="focus:outline-none text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900">Close</button></a>

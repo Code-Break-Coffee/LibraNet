@@ -527,7 +527,7 @@ class InchargeController
             }
             if($search_type == "book")
             {
-                $books = $this->db->query("SELECT * from book where Title like :search or Author like :search",["search" => "%$search%"])->fetchAll();
+                $books = $this->db->query("SELECT * from book_master where Title like :search or Author1 like :search or Author2 like :search or Author3 like :search",["search" => "%$search%"])->fetchAll();
                 load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"books" => $books,"members" => $members,"incharges" => $incharges]);
                 exit;
             }
