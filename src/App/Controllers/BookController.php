@@ -28,7 +28,7 @@ class BookController
     {
         $bookNo = $_POST["issue_book_no"];
         $memberEmail = $_POST["issue_member_email"];
-        $inchargeId = Session::get("incharge")["Id"];
+        $inchargeId = Session::get("incharge")->Id;
 
         $transactions=[];
         $errors=[];
@@ -138,7 +138,7 @@ class BookController
     {
         $bookNo = $_POST["return_book_no"];
         $memberEmail = $_POST["return_member_email"];
-        $inchargeId = Session::get("incharge")["Id"];
+        $inchargeId = Session::get("incharge")->Id;
 
         $errors=[];
         $transactions=[];

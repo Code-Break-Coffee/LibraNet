@@ -1,4 +1,7 @@
 <?php
+use Framework\Session;
+$errors = Session::get("errors");
+$incharge = Session::get("inchargeSet") ?? Session::get("incharge");
 loadComponent("Head");
 loadComponent("Sidebar", [
     "components" => [
@@ -35,15 +38,22 @@ loadComponent("Sidebar", [
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
         <?=loadComponent("InchargeDashboard/GearForms") ?>
+        <?=isset($errors) ? loadComponent("ErrorAlert",["errors"=>$errors ?? []]) : ""?>
         <div class="flex justify-center items-center min-h-[70vh]">
-            <div class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <form class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md" action="/incharge-change-profile" method="post">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Change Profile</h2>
-                <input type="text" name="name" placeholder="Full Name" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
-                <input type="email" name="email" placeholder="Email" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input type="hidden" name="_method" value="PUT"/>
+                <input required value="<?=$incharge->FName ?? "" ?>" type="text" name="first_name" placeholder="First Name" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input value="<?=$incharge->MName ?? "" ?>" type="text" name="middle_name" placeholder="Middle Name" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input required value="<?=$incharge->LName ?? "" ?>" type="text" name="last_name" placeholder="Last Name" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input required value="<?=$incharge->PhoneNo ?? "" ?>" type="tel" name="phone_no" placeholder="Phone No." class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
                 <button type="submit" class="bg-yellow-600 text-white px-4 py-2 rounded w-full hover:bg-yellow-700">Update</button>
-            </div>
+            </form>
         </div>
     </main>
 </div>
 
 <?= loadComponent("Tail"); ?>
+<?php
+Session::unset("errors");
+?>
