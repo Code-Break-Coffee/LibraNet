@@ -494,4 +494,51 @@ class InchargeController
         EmailController::sendEmail($incharge->Email,"Password Changed Successfully","Your Password has been changed successfully","<h1>Your Password has been changed successfully</h1>");
         redirect("/incharge-change-password",["success" => "Password Changed Successfully !!!"]);
     }
+
+    public function search()
+    {
+        if($_SERVER["REQUEST_METHOD"] == "POST")
+        {
+            $search = $_POST["search"];
+            $search_type = $_POST["search_type"];
+            $errors=[];
+            $members=[];
+            $incharges=[];
+            $books=[];
+            
+            if(!Validation::string($search,1,50))
+            {
+                $errors["search"] = "Search must be between 1 and 50 characters !!!";
+            }
+            if($search_type == "")
+            {
+                $errors["search_type"] = "Select a Search Type !!!";
+            }
+            if(!empty($errors))
+            {
+                load("Incharge/Dashboard.incharge.search",["search_errors" => $errors]);
+                exit;
+            }
+            if($search_type == "member")
+            {
+                $members = $this->db->query("SELECT * from member where FName like :search or MName like :search or LName like :search",["search" => "%$search%"])->fetchAll();
+                load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"members" => $members,"incharges" => $incharges,"books" => $books]);
+                exit;
+            }
+            if($search_type == "book")
+            {
+                $books = $this->db->query("SELECT * from book where Title like :search or Author like :search",["search" => "%$search%"])->fetchAll();
+                load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"books" => $books,"members" => $members,"incharges" => $incharges]);
+                exit;
+            }
+            if($search_type == "incharge")
+            {
+                $incharges = $this->db->query("SELECT * from incharge where FName like :search or MName like :search or LName like :search",["search" => "%$search%"])->fetchAll();
+                load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"incharges" => $incharges,"members" => $members,"books" => $books]);
+                exit;
+            }
+        }
+        load("Incharge/Dashboard.incharge.search",["search_type"=>"","members" => [],"incharges" => [],"books" => []]);
+    }
+
 }

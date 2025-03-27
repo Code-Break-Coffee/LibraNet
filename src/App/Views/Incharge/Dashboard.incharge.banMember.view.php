@@ -42,7 +42,7 @@ loadComponent("Sidebar", [
             <form action="/incharge-ban" method="POST" class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md min-w-[30vw]">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Ban a Member</h2>
                 <input type="hidden" name="_method" value="PUT"/>
-                <input required type="tel" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
+                <input required value='<?=(isset($_GET["member_id"]))?$_GET["member_id"]: ''?>' type="tel" name="member_id" placeholder="Member ID" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
                 <textarea required name="ban_reason" placeholder="Ban Reason" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white"><?= $ban_reason ?? "" ?></textarea>
                 <div class="relative">
                     <input required type="password" name="incharge_password" placeholder="Your Password" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
