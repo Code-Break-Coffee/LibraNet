@@ -79,9 +79,7 @@ class InchargeController
             load("Incharge/Signin.incharge",["errors" => $errors]);
             exit;
         }
-        Session::set("incharge",[
-            "Id" => $incharge->InchargeId
-        ]);
+        Session::set("incharge",$this->db->query("SELECT * from incharge where Id = :id",["id" => $incharge->InchargeId])->fetch());
         redirect("/incharge-dashboard");
     }
 
@@ -114,7 +112,7 @@ class InchargeController
      */
     public function inchargeProfile()
     {
-        $incharge_id = Session::get("incharge")["Id"];
+        $incharge_id = Session::get("incharge")->Id;
         $incharge = $this->db->query("SELECT * from incharge where Id = :id",["id" => $incharge_id])->fetch();
         load("Incharge/Dashboard.incharge.profile",["incharge" => $incharge]);
     }
@@ -217,7 +215,7 @@ class InchargeController
      */
     public function getInchargeTier()
     {
-        return (int) $this->db->query("SELECT Tier from incharge where Id = :id",["id" => Session::get("incharge")["Id"]])->fetch()->Tier;
+        return (int) $this->db->query("SELECT Tier from incharge where Id = :id",["id" => Session::get("incharge")->Id])->fetch()->Tier;
     }
 
     /**
@@ -235,7 +233,7 @@ class InchargeController
      */
     public function deleteIncharge()
     {
-        $deleterId = Session::get("incharge")["Id"];
+        $deleterId = Session::get("incharge")->Id;
         $deleterTier = $this->getInchargeTier();
         $incharge_id = $_POST["incharge_id"];
         $deleterPassword = $_POST["incharge_password"];
@@ -293,9 +291,77 @@ class InchargeController
      */
     public function changeProfile()
     {
-        load("Incharge/Dashboard.incharge.changeProfile");
+        $incharge_id = Session::get("incharge")->Id;
+        $incharge = $this->db->query("SELECT * from incharge where Id = :id",["id" => $incharge_id])->fetch();
+        load("Incharge/Dashboard.incharge.changeProfile",["incharge" => $incharge]);
     }
 
+    /**
+     * Incharge Profile Update Profile
+     * @return void
+     */
+    public function updateProfile()
+    {
+        $incharge_id = Session::get("incharge")->Id;
+        $first_name = $_POST["first_name"];
+        $middle_name = $_POST["middle_name"] == "" ? null : $_POST["middle_name"];
+        $last_name = $_POST["last_name"];
+        $phone_no = $_POST["phone_no"];
+        $errors=[];
+        if(!Validation::string($first_name,3,50))
+        {
+            $errors["first_name"] = "First Name must be between 3 and 50 characters !!!";
+        }
+        if(!Validation::string($middle_name,0,50) && $middle_name != null)
+        {
+            $errors["middle_name"] = "Middle Name must be between 0 and 50 characters !!!";
+        }
+        if(!Validation::string($last_name,3,50))
+        {
+            $errors["last_name"] = "Last Name must be between 3 and 50 characters !!!";
+        }
+        if(!Validation::phone($phone_no))
+        {
+            $errors["phone_no"] = "Invalid Phone Number !!!";
+        }
+        if(!empty($errors))
+        {
+            // load("Incharge/Dashboard.incharge.changeProfile",[
+            //     "errors" => $errors,
+            //     "incharge" => (object) [
+            //         "FName" => $first_name,
+            //         "MName" => $middle_name,
+            //         "LName" => $last_name,
+            //         "PhoneNo" => $phone_no
+            //     ]
+            // ]);
+            // exit;
+            Session::set("errors",$errors);
+            Session::set("inchargeSet",[
+                "FName" => $first_name,
+                "MName" => $middle_name,
+                "LName" => $last_name,
+                "PhoneNo" => $phone_no
+            ]);
+            redirect("/incharge-change-profile");
+        }
+        $incharge = $this->db->query("SELECT * from incharge where Id = :id",["id" => $incharge_id])->fetch();
+        if(!$incharge)
+        {
+            redirect("/incharge-dashboard");
+        }
+        $params=[
+            "FName" => $first_name,
+            "MName" => $middle_name,
+            "LName" => $last_name,
+            "PhoneNo" => $phone_no,
+            "Id" => $incharge_id
+        ];
+        $this->db->query("UPDATE incharge set FName = :FName, MName = :MName, LName = :LName, PhoneNo = :PhoneNo where Id = :Id",$params);
+        EmailController::sendEmail($this->db->query("SELECT Email from incharge_auth where InchargeId = :id",["id" => $incharge_id])->fetch()->Email,"Profile Updated","Your Profile has been updated successfully !!!","<h1>Your Profile has been updated successfully !!!</h1>");
+        redirect("/incharge-profile",["success" => "Profile Updated Successfully !!!"]);
+    }
+    
     /**
      * Incharge Profile Ban Member
      * @return void
@@ -312,7 +378,7 @@ class InchargeController
     public function inchargeBan()
     {
         $member_id = $_POST["member_id"];
-        $incharge_id = Session::get("incharge")["Id"];
+        $incharge_id = Session::get("incharge")->Id;
         $incharge_password = $_POST["incharge_password"];
         $ban_reason = $_POST["ban_reason"];
 
@@ -393,7 +459,7 @@ class InchargeController
     public function inchargeUnban()
     {
         $member_id = $_POST["member_id"];
-        $incharge_id = Session::get("incharge")["Id"];
+        $incharge_id = Session::get("incharge")->Id;
 
         $errors=[];
 
@@ -476,7 +542,7 @@ class InchargeController
             ]);
             exit;
         }
-        $incharge_id = Session::get("incharge")["Id"];
+        $incharge_id = Session::get("incharge")->Id;
         $incharge = $this->db->query("SELECT * from incharge_auth where InchargeId = :id",["id" => $incharge_id])->fetch();
         if(!$incharge)
         {

@@ -50,6 +50,7 @@ $router->post("/incharge-transactions","BookController@issueBook",["auth-incharg
 $router->put("/incharge-ban","InchargeController@inchargeBan",["auth-incharge"]);
 $router->put("/incharge-unban","InchargeController@inchargeUnban",["auth-incharge"]);
 $router->put("/incharge-change-password","InchargeController@changePassword",["auth-incharge"]);
+$router->put("/incharge-change-profile","InchargeController@updateProfile",["auth-incharge"]);
 
 
 //----Books
