@@ -1,5 +1,7 @@
 <?php
+
 use Framework\Session;
+
 $issueSuccess = Session::getFlash("issueSuccess");
 $returnSuccess = Session::getFlash("returnSuccess");
 loadComponent("Head");
@@ -39,8 +41,8 @@ loadComponent("Sidebar", [
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Transactions</h1>
         <?= isset($issue_errors) ? loadComponent("ErrorAlert", ["errors" => $issue_errors ?? []]) : "" ?>
         <?= isset($return_errors) ? loadComponent("ErrorAlert", ["errors" => $return_errors ?? []]) : "" ?>
-        <?=isset($issueSuccess) ? loadComponent("SuccessAlert",["msg" => $issueSuccess ?? ""]) : ""?>
-        <?=isset($returnSuccess) ? loadComponent("SuccessAlert",["msg" => $returnSuccess ?? ""]) : ""?>
+        <?= isset($issueSuccess) ? loadComponent("SuccessAlert", ["msg" => $issueSuccess ?? ""]) : "" ?>
+        <?= isset($returnSuccess) ? loadComponent("SuccessAlert", ["msg" => $returnSuccess ?? ""]) : "" ?>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <form action="/incharge-transactions" method="POST" class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
@@ -51,7 +53,7 @@ loadComponent("Sidebar", [
             </form>
             <form action="/incharge-transactions" method="POST" class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Return a Book</h2>
-                <input type="hidden" name="_method" value="PUT"/>
+                <input type="hidden" name="_method" value="PUT" />
                 <input value="<?= $return_data["memberEmail"] ?? "" ?>" required type="email" name="return_member_email" placeholder="Member Email" class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <input value="<?= $return_data["bookNo"] ?? "" ?>" required type="tel" name="return_book_no" placeholder="Book No." class="w-full mb-2 p-2 rounded border focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                 <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded w-full hover:bg-green-700">
@@ -76,22 +78,39 @@ loadComponent("Sidebar", [
                         </tr>
                     </thead>
                     <tbody>
-                        <?php
-                        foreach ($transactions as $transaction) {
-                            echo "<tr class='hover:bg-gray-400 dark:hover:bg-gray-600'>
-                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction->Id}</td>
-                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction->BorrowerId}</td>
-                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction->BookNo}</td>
-                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction->LibrarianId}</td>
-                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction->BorrowDate}</td>
-                        <td class='border border-black dark:border-gray-600 p-2'>{$transaction->ReturnDate}</td>
-                    </tr>";
-                        }
-                        ?>
+                        <?php foreach ($transactions as $transaction): ?>
+                            <tr class='hover:bg-gray-400 dark:hover:bg-gray-600'>
+                                <td class='border border-black dark:border-gray-600 p-2'><?= $transaction->Id ?></td>
+                                <td class='border border-black dark:border-gray-600 p-2'><?= $transaction->BorrowerId ?></td>
+                                <td class='border border-black dark:border-gray-600 p-2'><?= $transaction->BookNo ?></td>
+                                <td class='border border-black dark:border-gray-600 p-2'><?= $transaction->LibrarianId ?></td>
+                                <td class='border border-black dark:border-gray-600 p-2'><?= $transaction->BorrowDate ?></td>
+                                <td class='border border-black dark:border-gray-600 p-2'><?= $transaction->ReturnDate ?></td>
+                            </tr>
+                        <?php endforeach; ?>
                     </tbody>
                 </table>
             </div>
+
+            <div class="flex justify-center mt-4 space-x-4">
+                <?php if ($currentPage > 1): ?>
+                    <a href="?page=<?= $currentPage - 1 ?>" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Previous
+                    </a>
+                <?php endif; ?>
+
+                <span class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded">
+                    Page <?= $currentPage ?> of <?= $totalPages ?>
+                </span>
+
+                <?php if ($currentPage < $totalPages): ?>
+                    <a href="?page=<?= $currentPage + 1 ?>" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Next
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
+
     </main>
 </div>
 <?= loadComponent("Tail"); ?>

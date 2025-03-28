@@ -96,9 +96,20 @@ class InchargeController
      */
     public function inchargeTransactions()
     {
-        $transactions = [];
-        $transactions = $this->db->query("SELECT * from transactions order by BorrowDate desc limit 5")->fetchAll();
-        load("Incharge/Dashboard.incharge.transactions", ["transactions" => $transactions]);
+        $limit = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
+
+        $transactions = $this->db->query("SELECT * FROM transactions ORDER BY BorrowDate DESC LIMIT $limit OFFSET $offset")->fetchAll();
+
+        $totalQuery = $this->db->query("SELECT COUNT(*) as count FROM transactions")->fetch();
+        $totalPages = ceil($totalQuery->count / $limit);
+
+        load("Incharge/Dashboard.incharge.transactions", [
+            "transactions" => $transactions,
+            "currentPage" => $page,
+            "totalPages" => $totalPages
+        ]);
     }
 
     /**
