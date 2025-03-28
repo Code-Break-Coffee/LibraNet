@@ -535,19 +535,37 @@ class InchargeController
                 load("Incharge/Dashboard.incharge.search", ["search_errors" => $errors]);
                 exit;
             }
-            if ($search_type == "member") {
-                $members = $this->db->query("SELECT * from member where FName like :search or MName like :search or LName like :search", ["search" => "%$search%"])->fetchAll();
-                load("Incharge/Dashboard.incharge.search", ["search_type" => $search_type, "members" => $members, "incharges" => $incharges, "books" => $books]);
+            if($search_type == "member")
+            {
+                $members = $this->db->query("SELECT * from member where FName like :search or MName like :search or LName like :search",["search" => "%$search%"])->fetchAll();
+                if(empty($members)){
+                    $errors["search"] = "No Members Found !!!";
+                    load("Incharge/Dashboard.incharge.search",["search_errors" => $errors]);
+                    exit;
+                }
+                load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"members" => $members,"incharges" => $incharges,"books" => $books]);
                 exit;
             }
-            if ($search_type == "book") {
-                $books = $this->db->query("SELECT * from book_master where Title like :search or Author1 like :search or Author2 like :search or Author3 like :search", ["search" => "%$search%"])->fetchAll();
-                load("Incharge/Dashboard.incharge.search", ["search_type" => $search_type, "books" => $books, "members" => $members, "incharges" => $incharges]);
+            if($search_type == "book")
+            {
+                $books = $this->db->query("SELECT * from book_master where Title like :search or Author1 like :search or Author2 like :search or Author3 like :search",["search" => "%$search%"])->fetchAll();
+                if(empty($books)){
+                    $errors["search"] = "No Book Found !!!";
+                    load("Incharge/Dashboard.incharge.search",["search_errors" => $errors]);
+                    exit;
+                }
+                load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"books" => $books,"members" => $members,"incharges" => $incharges]);
                 exit;
             }
-            if ($search_type == "incharge") {
-                $incharges = $this->db->query("SELECT * from incharge where FName like :search or MName like :search or LName like :search", ["search" => "%$search%"])->fetchAll();
-                load("Incharge/Dashboard.incharge.search", ["search_type" => $search_type, "incharges" => $incharges, "members" => $members, "books" => $books]);
+            if($search_type == "incharge")
+            {
+                $incharges = $this->db->query("SELECT * from incharge where FName like :search or MName like :search or LName like :search",["search" => "%$search%"])->fetchAll();
+                if(empty($books)){
+                    $errors["incharges"] = "No Incharges Found !!!";
+                    load("Incharge/Dashboard.incharge.search",["search_errors" => $errors]);
+                    exit;
+                }
+                load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"incharges" => $incharges,"members" => $members,"books" => $books]);
                 exit;
             }
         }

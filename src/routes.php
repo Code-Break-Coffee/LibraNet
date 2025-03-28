@@ -24,6 +24,7 @@ $router->get("/unban-member","InchargeController@unbanMember",["auth-incharge"])
 $router->get("/incharge-change-password","InchargeController@changePass",["auth-incharge"]);
 $router->get("/incharge-search","InchargeController@search",["auth-incharge"]);
 $router->get("/incharge-delete-book","BookController@deleteBook",["auth-incharge"]);
+$router->get("/incharge-edit-book","BookController@editBook",["auth-incharge"]);
 
 //------------------------------------------------------------------Post Requests
 
@@ -41,6 +42,7 @@ $router->get("/incharge-signout","InchargeController@inchargeSignout",["auth-inc
 //----Incharge Dashboard
 $router->post("/add-incharge","InchargeController@addIncharge",["auth-incharge"]);
 $router->post("/incharge-search","InchargeController@search",["auth-incharge"]);
+$router->post("/incharge-edit-book","BookController@editBook",["auth-incharge"]);
 //----Books
 $router->post("/incharge-transactions","BookController@issueBook",["auth-incharge"]);
 

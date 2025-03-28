@@ -316,4 +316,104 @@ class BookController
         }
         load("Incharge/Dashboard.incharge.DeleteBook");
     }
+    
+    /**
+     * Edit a Book
+     * @return void
+     */
+    public function editBook(){
+        if($_SERVER["REQUEST_METHOD"]=="POST"){
+            $bookNo = $_POST["book_no"];
+            $bookName = $_POST["book_name"];
+            $bookAuthor1 = $_POST["book_author1"];
+            $bookAuthor2 = $_POST["book_author2"];
+            $bookAuthor3 = $_POST["book_author3"];
+            $edition = $_POST["edition"];
+            $publisher = $_POST["publisher"];
+            $pages = $_POST["pages"];
+            $remark = $_POST["remark"];
+            $errors=[];
+            $transactions=[];
+    
+            if(!Validation::string($bookNo))
+            {
+                $errors["bookNo"] = "Invalid Book No. !!!";
+            }
+    
+            if(!empty($errors))
+            {
+                load("Incharge/Dashboard.incharge.EditBook",[
+                    "delete_errors" => $errors,
+                ]);
+                exit;
+            }
+    
+    
+            //-----Book Check
+            $book = $this->db->query("SELECT * from book_master where BookNo = :bookNo",["bookNo" => $bookNo])->fetch();
+            if(!$book)
+            {
+                $errors["bookNo"] = "Invalid Book No. !!!";
+                load("Incharge/Dashboard.incharge.EditBook",[
+                    "delete_errors" => $errors,
+                ]);
+                exit;
+            }
+    
+            if(strtoupper($book->Status) === "ISSUED")
+            {
+                $errors["bookNo"] = "Book is not Available right now !!!";
+                load("Incharge/Dashboard.incharge.EditBook",[
+                    "delete_errors" => $errors,
+                ]);
+                exit;
+            }
+    
+            $update = $this->db->query(
+                "UPDATE book_master 
+                SET 
+                    Title = :Title, 
+                    Author1 = :Author1, 
+                    Author2 = :Author2, 
+                    Author3 = :Author3, 
+                    Edition = :Edition, 
+                    Publisher = :Publisher, 
+                    Pages = :Pages, 
+                    Remark = :Remark 
+                WHERE 
+                    BookNo = :bookNo",
+                [
+                    "bookNo"   => $bookNo,
+                    "Title"    => $bookName,
+                    "Author1"  => $bookAuthor1,
+                    "Author2"  => $bookAuthor2,
+                    "Author3"  => $bookAuthor3,
+                    "Edition"  => $edition,
+                    "Publisher"=> $publisher,
+                    "Pages"    => $pages,
+                    "Remark"   => $remark
+                ]
+            );            
+            if($update)
+            {
+                load("Incharge/Dashboard.incharge.search",[
+                    "success" => "Book $bookNo Edited Successfully !!!"
+                ]);
+                exit;
+            }
+        }
+
+        $book_no=$_GET["book_no"]??"";
+        if($book_no==""){
+            redirect("/incharge-dashboard");
+        }
+        $book_detail=$this->db->query("SELECT * from book_master where BookNo = :bookNo",["bookNo" => $book_no])->fetch();
+        if(!$book_detail){
+            redirect("/incharge-dashboard");
+        }
+        load("Incharge/Dashboard.incharge.EditBook",[
+            "book_detail" => $book_detail
+        ]);
+        exit;
+    } 
 }

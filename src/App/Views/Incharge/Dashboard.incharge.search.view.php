@@ -37,6 +37,7 @@ loadComponent("Sidebar", [
         <div class="flex justify-center items-center mt-20 pt-20">
             <div class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
                 <?= isset($search_errors) ? loadComponent("ErrorAlert", ["errors" => $search_errors ?? []]) : "" ?>
+                <?=isset($success) ? loadComponent("SuccessAlert",["msg" => $success ?? ""]) : ""?>
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Search</h2>
                 <form action="/incharge-search" method="POST">
                     <input type="text" name="search" placeholder="Search" class="w-full mb-2 p-2 rounded border dark:border-gray-600 dark:bg-gray-700 dark:text-white">
