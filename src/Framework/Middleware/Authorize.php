@@ -25,7 +25,7 @@ class Authorize
         //Comment out if something goes wrong
         $sessionTimeout = 6*60*60 ;
 
-        if (isset(Session::get("LAST_ACTIVITY")) && (time() - Session::get("LAST_ACTIVITY") > $sessionTimeout)) {
+        if (isset($_SESSION["LAST_ACTIVITY"]) && (time() - Session::get("LAST_ACTIVITY") > $sessionTimeout)) {
             Session::unset("LAST_ACTIVITY");
             if ($role === "auth-incharge") {
                 Session::unset("incharge");
