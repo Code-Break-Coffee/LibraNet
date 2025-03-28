@@ -22,28 +22,34 @@ class Authorize
      */
     function handle($role)
     {
-        if($role === "guest-incharge" && $this->isAuthenticated("incharge"))
-        {
-            return redirect("/incharge-dashboard");
+        //Comment out if something goes wrong
+        $sessionTimeout = 6*60*60 ;
+
+        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sessionTimeout)) {
+            session_unset();
+            session_destroy();
+            
+            if ($role === "auth-incharge") {
+                return redirect("/incharge-signin");
+            } else if ($role === "auth-member") {
+                return redirect("/");
+            }
         }
-        else if($role === "auth-incharge" && !$this->isAuthenticated("incharge"))
-        {
+
+        $_SESSION['LAST_ACTIVITY'] = time();
+
+
+        if ($role === "guest-incharge" && $this->isAuthenticated("incharge")) {
+            return redirect("/incharge-dashboard");
+        } else if ($role === "auth-incharge" && !$this->isAuthenticated("incharge")) {
             return redirect("/incharge-signin");
-        }
-        else if($role === "guest-member" && $this->isAuthenticated("member"))
-        {
+        } else if ($role === "guest-member" && $this->isAuthenticated("member")) {
             return redirect("/member-dashboard");
-        }
-        else if($role === "auth-member" && !$this->isAuthenticated("member"))
-        {
+        } else if ($role === "auth-member" && !$this->isAuthenticated("member")) {
             return redirect("/");
-        }
-        else if($role === "guest-member" && $this->isAuthenticated("incharge"))
-        {
+        } else if ($role === "guest-member" && $this->isAuthenticated("incharge")) {
             return redirect("/incharge-dashboard");
-        }
-        else if($role === "guest-incharge" && $this->isAuthenticated("member"))
-        {
+        } else if ($role === "guest-incharge" && $this->isAuthenticated("member")) {
             return redirect("/member-dashboard");
         }
     }

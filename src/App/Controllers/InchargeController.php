@@ -5,7 +5,6 @@ namespace App\Controllers;
 use Framework\Validation;
 use Framework\Database;
 use Framework\Session;
-use Symfony\Component\Mime\Email;
 
 class InchargeController
 {
