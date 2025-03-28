@@ -25,9 +25,14 @@ class Authorize
         //Comment out if something goes wrong
         $sessionTimeout = 6*60*60 ;
 
-        if (isset($_SESSION['LAST_ACTIVITY']) && (time() - $_SESSION['LAST_ACTIVITY'] > $sessionTimeout)) {
-            session_unset();
-            session_destroy();
+        if (isset(Session::get("LAST_ACTIVITY")) && (time() - Session::get("LAST_ACTIVITY") > $sessionTimeout)) {
+            Session::unset("LAST_ACTIVITY");
+            if ($role === "auth-incharge") {
+                Session::unset("incharge");
+            } else if ($role === "auth-member") {
+                Session::unset("member");
+            }
+            Session::destroy();
             
             if ($role === "auth-incharge") {
                 return redirect("/incharge-signin");
@@ -36,7 +41,7 @@ class Authorize
             }
         }
 
-        $_SESSION['LAST_ACTIVITY'] = time();
+        Session::set("LAST_ACTIVITY", time());
 
 
         if ($role === "guest-incharge" && $this->isAuthenticated("incharge")) {
