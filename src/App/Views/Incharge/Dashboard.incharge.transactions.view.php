@@ -1,5 +1,7 @@
 <?php
-
+use Framework\Session;
+$issueSuccess = Session::getFlash("issueSuccess");
+$returnSuccess = Session::getFlash("returnSuccess");
 loadComponent("Head");
 loadComponent("Sidebar", [
     "components" => [
@@ -37,8 +39,8 @@ loadComponent("Sidebar", [
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Transactions</h1>
         <?= isset($issue_errors) ? loadComponent("ErrorAlert", ["errors" => $issue_errors ?? []]) : "" ?>
         <?= isset($return_errors) ? loadComponent("ErrorAlert", ["errors" => $return_errors ?? []]) : "" ?>
-        <?= isset($_GET["issueSuccess"]) ? loadComponent("SuccessAlert", ["msg" => $_GET["issueSuccess"]]) : "" ?>
-        <?= isset($_GET["returnSuccess"]) ? loadComponent("SuccessAlert", ["msg" => $_GET["returnSuccess"]]) : "" ?>
+        <?=isset($issueSuccess) ? loadComponent("SuccessAlert",["msg" => $issueSuccess ?? ""]) : ""?>
+        <?=isset($returnSuccess) ? loadComponent("SuccessAlert",["msg" => $returnSuccess ?? ""]) : ""?>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <form action="/incharge-transactions" method="POST" class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md">
