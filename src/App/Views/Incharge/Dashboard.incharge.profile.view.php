@@ -1,4 +1,6 @@
 <?php
+use Framework\Session;
+$success = Session::getFlash("success");
 loadComponent("Head");
 loadComponent("Sidebar", [
     "components" => [
@@ -34,7 +36,7 @@ loadComponent("Sidebar", [
     <main class="container mx-auto px-4 py-8 relative">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
         <?= loadComponent("InchargeDashboard/GearForms") ?>
-        <?=isset($_GET["success"]) ? loadComponent("SuccessAlert",["msg" => $_GET["success"] ?? ""]) : ""?>
+        <?=isset($success) ? loadComponent("SuccessAlert",["msg" => $success ?? ""]) : ""?>
         <div class="bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md border border-gray-200 dark:border-gray-700 transition-all duration-300 hover:shadow-lg">
             <h2 class="text-xl font-bold mb-4 text-gray-800 dark:text-gray-300 border-b border-gray-300 dark:border-gray-600 pb-2">Profile Details</h2>
             <div class="space-y-2">

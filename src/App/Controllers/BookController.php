@@ -123,9 +123,8 @@ class BookController
             $update=$this->db->query("UPDATE book_master set Status = 'Issued' where BookNo = :bookNo",["bookNo" => $bookNo]);
             if($update)
             {
-                redirect("/incharge-transactions",[
-                    "issueSuccess" => "Book $bookNo issued by member $member->id Successfully !!!"
-                ]);
+                Session::setFlash("issueSuccess","Book $bookNo issued by member $member->id Successfully !!!");
+                redirect("/incharge-transactions");
             }
         }
     }
@@ -240,9 +239,8 @@ class BookController
                 $update = $this->db->query("UPDATE book_master set Status = 'Available' where BookNo = :bookNo",["bookNo" => $bookNo]);
                 if($update)
                 {
-                    redirect("/incharge-transactions",[
-                        "returnSuccess" => "Book $bookNo returned by member $member->id Successfully !!!"
-                    ]);
+                    Session::setFlash("returnSuccess","Book $bookNo returned by member $member->id Successfully !!!");
+                    redirect("/incharge-transactions");
                 }
             }
         }

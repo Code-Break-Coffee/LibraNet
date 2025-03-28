@@ -1,5 +1,6 @@
 <?php
-
+use Framework\Session;
+$success = Session::getFlash("success");
 loadComponent("Head");
 loadComponent("Sidebar", [
     "components" => [
@@ -37,7 +38,7 @@ loadComponent("Sidebar", [
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Profile</h1>
         <?=loadComponent("InchargeDashboard/GearForms") ?>
         <?=isset($errors) ? loadComponent("ErrorAlert",["errors"=>$errors ?? []]) : ""?>
-        <?=isset($_GET["success"]) ? loadComponent("SuccessAlert",["msg" => $_GET["success"] ?? ""]) : ""?>
+        <?=isset($success) ? loadComponent("SuccessAlert",["msg" => $success ?? ""]) : ""?>
         <div class="flex justify-center items-center min-h-[70vh]">
             <form action="/incharge-ban" method="POST" class="max-w-lg bg-gray-50 dark:bg-gray-800 p-6 rounded-lg shadow-md min-w-[30vw]">
                 <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-300">Ban a Member</h2>

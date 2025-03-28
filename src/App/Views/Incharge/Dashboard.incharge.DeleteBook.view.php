@@ -1,5 +1,6 @@
 <?php
-
+use Framework\Session;
+$success = Session::getFlash("success");
 loadComponent("Head");
 loadComponent("Sidebar", [
     "components" => [
