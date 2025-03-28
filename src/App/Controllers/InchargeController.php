@@ -274,7 +274,8 @@ class InchargeController
     {
         $incharge_id = Session::get("incharge")->Id;
         $incharge = $this->db->query("SELECT * from incharge where Id = :id", ["id" => $incharge_id])->fetch();
-        load("Incharge/Dashboard.incharge.changeProfile", ["incharge" => $incharge]);
+        Session::set("incharge", $incharge);
+        load("Incharge/Dashboard.incharge.changeProfile");
     }
 
     /**

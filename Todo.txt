@@ -5,8 +5,6 @@ Frontend for book Manipulation and Search
 
 //////Incharge
 Tanishq---
-ban unban
-change Details
 pagination
 Session clear on 6hrs timeout
 
