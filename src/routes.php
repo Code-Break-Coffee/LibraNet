@@ -25,6 +25,7 @@ $router->get("/incharge-change-password","InchargeController@changePass",["auth-
 $router->get("/incharge-search","InchargeController@search",["auth-incharge"]);
 $router->get("/incharge-delete-book","BookController@deleteBook",["auth-incharge"]);
 $router->get("/incharge-edit-book","BookController@editBook",["auth-incharge"]);
+$router->get("/incharge-book-insert","BookController@insertBook",["auth-incharge"]);
 
 //------------------------------------------------------------------Post Requests
 
@@ -45,6 +46,8 @@ $router->post("/incharge-search","InchargeController@search",["auth-incharge"]);
 $router->post("/incharge-edit-book","BookController@editBook",["auth-incharge"]);
 //----Books
 $router->post("/incharge-transactions","BookController@issueBook",["auth-incharge"]);
+$router->post("/incharge-book-insert","BookController@insertBook",["auth-incharge"]);
+
 
 //------------------------------------------------------------------Put Requests
 

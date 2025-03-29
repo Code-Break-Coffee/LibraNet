@@ -416,4 +416,104 @@ class BookController
         ]);
         exit;
     } 
+
+    /**
+     * Insert a Book
+     * @return void
+     */
+    public function insertBook(){
+        if($_SERVER["REQUEST_METHOD"]=="POST"){
+            $bookName = $_POST["book_name"];
+            $bookAuthor1 = $_POST["book_author1"];
+            $bookAuthor2 = $_POST["book_author2"];
+            $bookAuthor3 = $_POST["book_author3"];
+            $edition = $_POST["edition"];
+            $publisher = $_POST["publisher"];
+            $pages = $_POST["pages"];
+            $remark = $_POST["remark"];
+            $errors=[];
+            
+            if(!Validation::string($bookName,3,50))
+            {
+                $errors["bookName"] = "Book Name should be of length between 3 to 50!!!";
+            }
+
+            if(!Validation::string($bookAuthor1,3,50))
+            {
+                $errors["bookAuthor"] = "Book Author 1 should be of length between 3 to 50!!!";
+            }
+
+            if(!Validation::string($bookAuthor2,0,50))
+            {
+                $errors["bookAuthor"] = "Book Author 2 should be of max length 50!!!";
+            }
+
+            if(!Validation::string($bookAuthor3,0,50))
+            {
+                $errors["bookAuthor"] = "Book Author 3 should be of max length 50!!!";
+            }
+
+            if(!Validation::string($edition,1,50))
+            {
+                $errors["edition"] = "Book Edition should be of length between 1 to 50!!!";
+            }
+
+            if(!Validation::string($publisher,1,100))
+            {
+                $errors["publisher"] = "Book Publisher should be of length between 1 to 100!!!";
+            }
+
+            if(!Validation::string($remark,1,200))
+            {
+                $errors["remark"] = "Book Remark should be of length between 1 to 100!!!";
+            }
+
+            if($pages<=0)
+            {
+                $errors["pages"] = "Book Pages should be greater than 0!!!";
+            }
+
+    
+            if(!empty($errors))
+            {
+                load("Incharge/Dashboard.incharge.BookInsert",[
+                    "insert_errors" => $errors,
+                ]);
+                exit;
+            }
+    
+    
+
+    
+            //-----Insert
+            $insert = $this->db->query(
+                "INSERT into book_master(Title, Author1, Author2, Author3, Edition, Publisher, Pages, Remark, Status, Rating) 
+                values(:Title, :Author1, :Author2, :Author3, :Edition, :Publisher, :Pages, :Remark,:Status,:Rating)",
+                [
+                    "Title"    => $bookName,
+                    "Author1"  => $bookAuthor1,
+                    "Author2"  => $bookAuthor2,
+                    "Author3"  => $bookAuthor3,
+                    "Edition"  => $edition,
+                    "Publisher"=> $publisher,
+                    "Pages"    => $pages,
+                    "Remark"   => $remark,
+                    "Status"  => "Available",
+                    "Rating"  => 0
+                ]
+            );
+            
+            
+    
+            if($insert)
+            {
+                load("Incharge/Dashboard.incharge.BookInsert",[
+                    "success" => "Book Inserted Successfully !!!"
+                ]);
+                exit;
+            }
+        }
+        load("Incharge/Dashboard.incharge.BookInsert");
+        exit;
+    }
 }
