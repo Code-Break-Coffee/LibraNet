@@ -257,7 +257,7 @@ class MemberController
             }
             else if(password_verify($otp,$unverfied_exists->code))
             {
-                $this->db->query("insert into member(FName,MName,LName,PhoneNo,Address,Affiliation,Remark) values(:first_name,:middle_name,:last_name,:phone,:address,:affilate,:remark)",["first_name"=>$first_name,"middle_name"=>$middle_name,"last_name"=>$last_name,"phone"=>$phone,"address"=>$address,"affilate"=>"","remark"=>""]);
+                $this->db->query("insert into member(FName,MName,LName,PhoneNo,Address,Affiliation,Remark,CreatedAt) values(:first_name,:middle_name,:last_name,:phone,:address,:affilate,:remark,:CreatedAt)",["first_name"=>$first_name,"middle_name"=>$middle_name,"last_name"=>$last_name,"phone"=>$phone,"address"=>$address,"affilate"=>"","remark"=>"","CreatedAt"=>date("Y-m-d H:i:s")]);
                 $curr_member_id=$this->db->conn->lastInsertId();
                 $this->db->query("insert into member_auth(MemberId,Email,Password,Status) values(:member_id,:email,:password,:status)",["member_id"=>$curr_member_id,"email"=>$email,"password"=>password_hash($password,PASSWORD_BCRYPT),"status"=>null]);
                 $this->db->query("delete from unverified where email=:email",["email"=>$email]);

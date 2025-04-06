@@ -476,7 +476,7 @@ class BookController
     
             if(!empty($errors))
             {
-                load("Incharge/Dashboard.incharge.BookInsert",[
+                load("Incharge/Dashboard.incharge.bookManipulation",[
                     "insert_errors" => $errors,
                 ]);
                 exit;
@@ -487,8 +487,8 @@ class BookController
     
             //-----Insert
             $insert = $this->db->query(
-                "INSERT into book_master(Title, Author1, Author2, Author3, Edition, Publisher, Pages, Remark, Status, Rating) 
-                values(:Title, :Author1, :Author2, :Author3, :Edition, :Publisher, :Pages, :Remark,:Status,:Rating)",
+                "INSERT into book_master(Title, Author1, Author2, Author3, Edition, Publisher, Pages, Remark, Status, Rating,InsertDate) 
+                values(:Title, :Author1, :Author2, :Author3, :Edition, :Publisher, :Pages, :Remark,:Status,:Rating,:InsertDate)",
                 [
                     "Title"    => $bookName,
                     "Author1"  => $bookAuthor1,
@@ -499,7 +499,8 @@ class BookController
                     "Pages"    => $pages,
                     "Remark"   => $remark,
                     "Status"  => "Available",
-                    "Rating"  => 0
+                    "Rating"  => 0,
+                    "InsertDate" => date("Y-m-d H:i:s")
                 ]
             );
             
@@ -507,13 +508,13 @@ class BookController
     
             if($insert)
             {
-                load("Incharge/Dashboard.incharge.BookInsert",[
+                load("Incharge/Dashboard.incharge.bookManipulation",[
                     "success" => "Book Inserted Successfully !!!"
                 ]);
                 exit;
             }
         }
-        load("Incharge/Dashboard.incharge.BookInsert");
+        load("Incharge/Dashboard.incharge.bookManipulation");
         exit;
     }
 }

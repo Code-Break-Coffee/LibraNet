@@ -581,4 +581,10 @@ class InchargeController
         }
         load("Incharge/Dashboard.incharge.search", ["search_type" => "", "members" => [], "incharges" => [], "books" => []]);
     }
-}
+
+
+    
+    public function manipulation(){
+            load("Incharge/Dashboard.incharge.bookManipulation");
+        }
+    }
