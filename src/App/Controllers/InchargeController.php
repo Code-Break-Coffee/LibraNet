@@ -36,7 +36,14 @@ class InchargeController
      */
     public function inchargeDashboard()
     {
-        load("Incharge/Dashboard.incharge.home");
+        $books = $this->db->query("SELECT count(*) as count from book_master")->fetch();
+        $members = $this->db->query("SELECT count(*) as count from member inner join member_auth 
+        on member.Id = member_auth.MemberId
+        where member_auth.Status = 'Active'")->fetch();
+        load("Incharge/Dashboard.incharge.home",[
+            "books" => $books,
+            "members" => $members,
+        ]);
     }
 
     /**

@@ -3,8 +3,8 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <h2 class="text-gray-600">Total Books</h2>
-                                <p class="text-3xl font-semibold text-l-3 dark:text-d-3">2,543</p>
-                                <p class="text-green-500">+12 added this month</p>
+                                <p class="text-3xl font-semibold text-l-3 dark:text-d-3"><?=$books->count ?? "" ?></p>
+                                <!-- <p class="text-green-500">+12 added this month</p> -->
                             </div>
                             <i class="fas fa-book text-l-3 dark:text-d-3 text-2xl"></i>
                         </div>
@@ -13,8 +13,8 @@
                         <div class="flex items-center justify-between">
                             <div>
                                 <h2 class="text-gray-600">Active Members</h2>
-                                <p class="text-3xl font-semibold text-l-3 dark:text-d-3">1,274</p>
-                                <p class="text-green-500">+32 new this month</p>
+                                <p class="text-3xl font-semibold text-l-3 dark:text-d-3"><?=$members->count ?? "" ?></p>
+                                <!-- <p class="text-green-500">+32 new this month</p> -->
                             </div>
                             <i class="fas fa-users text-l-3 dark:text-d-3 text-2xl"></i>
                         </div>
@@ -24,7 +24,7 @@
                             <div>
                                 <h2 class="text-gray-600">Books Checked Out</h2>
                                 <p class="text-3xl font-semibold text-l-3 dark:text-d-3">342</p>
-                                <p class="text-green-500">+18% from last month</p>
+                                <!-- <p class="text-green-500">+18% from last month</p> -->
                             </div>
                             <i class="fas fa-book-open text-l-3 dark:text-d-3 text-2xl"></i>
                         </div>
