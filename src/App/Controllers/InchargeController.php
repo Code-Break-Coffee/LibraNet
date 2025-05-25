@@ -40,9 +40,51 @@ class InchargeController
         $members = $this->db->query("SELECT count(*) as count from member inner join member_auth 
         on member.Id = member_auth.MemberId
         where member_auth.Status = 'Active'")->fetch();
-        load("Incharge/Dashboard.incharge.home",[
+        $issuedBooks = $this->db->query("SELECT count(*) as count from transactions where ReturnDate is null")->fetch();
+        $transactions = $this->db->query("SELECT count(*) as count from transactions")->fetch();
+        $recentTransactionBooks = $this->db->query("SELECT *,transactions.ReturnDate,transactions.BorrowDate from book_master inner join 
+        transactions on book_master.BookNo = transactions.BookNo order by transactions.BorrowDate desc limit 5")->fetchAll();
+        $popularBooks = $this->db->query("
+        SELECT 
+        book_master.BookNo,
+        book_master.Title,
+        book_master.Author1,
+        book_master.Author2,
+        book_master.Author3,
+        book_master.Publisher,
+        COUNT(transactions.BookNo) as count
+        FROM book_master
+        INNER JOIN transactions ON book_master.BookNo = transactions.BookNo
+        GROUP BY 
+        book_master.BookNo,
+        book_master.Title,
+        book_master.Author1,
+        book_master.Author2,
+        book_master.Author3,
+        book_master.Publisher
+        ORDER BY count DESC
+        LIMIT 5
+        ")->fetchAll();
+        $checkoutsOfEachBookForThisMonth = $this->db->query("SELECT BookNo, count(*) as count 
+        FROM transactions WHERE MONTH(BorrowDate) = MONTH(CURRENT_DATE()) 
+        AND YEAR(BorrowDate) = YEAR(CURRENT_DATE()) GROUP BY BookNo")->fetchAll();
+
+        $monthlyCheckouts = [];
+        foreach ($checkoutsOfEachBookForThisMonth as $checkout) {
+            $monthlyCheckouts[$checkout->BookNo] = $checkout->count;
+        }
+        foreach ($popularBooks as &$book) {
+            $book->monthly_checkouts = $monthlyCheckouts[$book->BookNo] ?? 0;
+        }
+        unset($book);
+
+        load("Incharge/Dashboard.incharge.home", [
             "books" => $books,
             "members" => $members,
+            "issuedBooks" => $issuedBooks,
+            "transactions" => $transactions,
+            "recentTransactionBooks" => $recentTransactionBooks,
+            "popularBooks" => $popularBooks
         ]);
     }
 
@@ -552,37 +594,34 @@ class InchargeController
                 load("Incharge/Dashboard.incharge.search", ["search_errors" => $errors]);
                 exit;
             }
-            if($search_type == "member")
-            {
-                $members = $this->db->query("SELECT * from member where FName like :search or MName like :search or LName like :search",["search" => "%$search%"])->fetchAll();
-                if(empty($members)){
+            if ($search_type == "member") {
+                $members = $this->db->query("SELECT * from member where FName like :search or MName like :search or LName like :search", ["search" => "%$search%"])->fetchAll();
+                if (empty($members)) {
                     $errors["search"] = "No Members Found !!!";
-                    load("Incharge/Dashboard.incharge.search",["search_errors" => $errors]);
+                    load("Incharge/Dashboard.incharge.search", ["search_errors" => $errors]);
                     exit;
                 }
-                load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"members" => $members,"incharges" => $incharges,"books" => $books]);
+                load("Incharge/Dashboard.incharge.search", ["search_type" => $search_type, "members" => $members, "incharges" => $incharges, "books" => $books]);
                 exit;
             }
-            if($search_type == "book")
-            {
-                $books = $this->db->query("SELECT * from book_master where Title like :search or Author1 like :search or Author2 like :search or Author3 like :search",["search" => "%$search%"])->fetchAll();
-                if(empty($books)){
+            if ($search_type == "book") {
+                $books = $this->db->query("SELECT * from book_master where Title like :search or Author1 like :search or Author2 like :search or Author3 like :search", ["search" => "%$search%"])->fetchAll();
+                if (empty($books)) {
                     $errors["search"] = "No Book Found !!!";
-                    load("Incharge/Dashboard.incharge.search",["search_errors" => $errors]);
+                    load("Incharge/Dashboard.incharge.search", ["search_errors" => $errors]);
                     exit;
                 }
-                load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"books" => $books,"members" => $members,"incharges" => $incharges]);
+                load("Incharge/Dashboard.incharge.search", ["search_type" => $search_type, "books" => $books, "members" => $members, "incharges" => $incharges]);
                 exit;
             }
-            if($search_type == "incharge")
-            {
-                $incharges = $this->db->query("SELECT * from incharge where FName like :search or MName like :search or LName like :search",["search" => "%$search%"])->fetchAll();
-                if(empty($books)){
+            if ($search_type == "incharge") {
+                $incharges = $this->db->query("SELECT * from incharge where FName like :search or MName like :search or LName like :search", ["search" => "%$search%"])->fetchAll();
+                if (empty($books)) {
                     $errors["incharges"] = "No Incharges Found !!!";
-                    load("Incharge/Dashboard.incharge.search",["search_errors" => $errors]);
+                    load("Incharge/Dashboard.incharge.search", ["search_errors" => $errors]);
                     exit;
                 }
-                load("Incharge/Dashboard.incharge.search",["search_type"=>$search_type,"incharges" => $incharges,"members" => $members,"books" => $books]);
+                load("Incharge/Dashboard.incharge.search", ["search_type" => $search_type, "incharges" => $incharges, "members" => $members, "books" => $books]);
                 exit;
             }
         }
@@ -590,8 +629,9 @@ class InchargeController
     }
 
 
-    
-    public function manipulation(){
-            load("Incharge/Dashboard.incharge.bookManipulation");
-        }
+
+    public function manipulation()
+    {
+        load("Incharge/Dashboard.incharge.bookManipulation");
     }
+}
