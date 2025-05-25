@@ -1,13 +1,13 @@
 <div class="bg-l-2 p-6 rounded-lg dark:bg-[#101623] shadow-sm">
     <h2 class="text-xl font-semibold text-l-3 dark:text-d-3 mb-4">Popular Books</h2>
-    <p class="text-gray-600 mb-4">Most checked out books this month</p>
+    <p class="text-gray-600 mb-4 dark:text-gray-300">Most checked out books this month</p>
     <ul>
         <?php foreach ($popularBooks as $book): ?>
             <li class="flex justify-between items-center mb-4">
                 <div class="flex items-center">
                     <div>
-                        <p class="text-gray-800 font-semibold"><?= htmlspecialchars($book->Title) ?></p>
-                        <p class="text-gray-600"><?= htmlspecialchars($book->Author1) ?></p>
+                        <p class="text-gray-800 font-semibold dark:text-gray-300"><?= htmlspecialchars($book->Title) ?></p>
+                        <p class="text-gray-600 dark:text-gray-300"><?= htmlspecialchars($book->Author1) ?></p>
                     </div>
                 </div>
                 <p class="text-l-3 dark:text-d-3 ml-4">
