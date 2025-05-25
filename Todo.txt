@@ -1,10 +1,7 @@
-Zakie-----
-Frontend for book Manipulation and Search
-
 //----------Dashboard
 
 //////Incharge
-Tanishq---
+
 
 Transactions-
     Issue
