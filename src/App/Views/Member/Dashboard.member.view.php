@@ -2,7 +2,7 @@
 loadComponent("Sidebar", [
     "components" => [
         "Home" => [
-            "url" => "/incharge-dashboard",
+            "url" => "/member-dashboard",
             "icon" => "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6",
         ],
         "Transactions" => [
@@ -18,7 +18,7 @@ loadComponent("Sidebar", [
             "icon" => "M4 19.5V5a2 2 0 012-2h10a2 2 0 012 2v14.5M16 2v16m-4-4l-4 4m0-4l4 4"
         ],
         "Search" => [
-            "url" => "/incharge-search",
+            "url" => "/member-search",
             "icon" => "M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
         ],
         "Sign Out" => [
@@ -31,10 +31,9 @@ loadComponent("Sidebar", [
 
 <div class="flex-1 bg-l-1 dark:bg-[#090A0C] ml-16">
     <div class="flex items-center justify-between bg-white dark:bg-[#101623] border-b dark:border-d-2 p-4 shadow">
-        <h1 class="text-2xl font-semibold text-gray-700">User Dashboard</h1>
-        <div class="relative">
-            <input type="text" placeholder="Search books, members..." class="border dark:bg-[#101623] rounded-full py-2 px-4 pl-10 w-80 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+        <div class="flex items-center gap-3">
+            <i class="fas fa-book-reader text-white dark:text-gray-300 text-2xl"></i>
+            <span class="text-xl font-semibold text-white dark:text-gray-300">LibraNet</span>
         </div>
     </div>
     <!-- <div class="relative">

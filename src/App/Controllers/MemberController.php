@@ -284,6 +284,39 @@ class MemberController
 
 
     /**
+     * Show the Member Search page
+     * @return void
+     */
+    public function memberSearch()
+    {
+        load("Member/Search.member");
+    }
+
+    /**
+     * Search for books based on the search query
+     * @return void
+     */
+    public function search()
+    {
+        if($_SERVER["REQUEST_METHOD"]=="POST"){
+            $search_query = $_POST["search_query"];
+            $errors = [];
+            if(!Validation::string($search_query,3,50)){
+                $errors["search_query"] = "Search query should be between 3 to 50 characters !!!";
+            }
+            if(!empty($errors)){
+                load("Member/Search.member",["errors"=>$errors]);
+                exit;
+            }
+            $searchResults = $this->db->query("SELECT BookNo,Title, Author1, Author2, Author3, Edition, Publisher, Remark 
+            FROM book_master WHERE Title LIKE :query OR Author1 LIKE :query
+            OR Author2 like :query or Author3 like :query or
+            Edition like :query or Publisher like :query or Remark like :query limit 10", ["query" => "%$search_query%"])->fetchAll();
+            load("Member/Search.member",["searchResults"=>$searchResults]);
+        }
+    }
+
+    /**
      * Updating Forgot Password for the 
      * @return void
      */
