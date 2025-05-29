@@ -5,6 +5,7 @@ namespace App\Controllers;
 use Framework\Database;
 use Framework\Validation;
 use Framework\Session;
+use Symfony\Component\Mime\Email;
 
 class MemberController
 {
@@ -74,7 +75,7 @@ class MemberController
             exit;
         }
         Session::set("member",[
-            "Id" => $member->member_id,
+            "Id" => $member->MemberId,
         ]);
         redirect("/member-dashboard");
     }
@@ -309,11 +310,60 @@ class MemberController
                 exit;
             }
             $searchResults = $this->db->query("SELECT BookNo,Title, Author1, Author2, Author3, Edition, Publisher, Remark 
-            FROM book_master WHERE Title LIKE :query OR Author1 LIKE :query
+            FROM book_master WHERE (Title LIKE :query OR Author1 LIKE :query
             OR Author2 like :query or Author3 like :query or
-            Edition like :query or Publisher like :query or Remark like :query limit 10", ["query" => "%$search_query%"])->fetchAll();
+            Edition like :query or Publisher like :query or Remark like :query) and Status = 'Available' limit 10", ["query" => "%$search_query%"])->fetchAll();
             load("Member/Search.member",["searchResults"=>$searchResults]);
         }
+    }
+
+    /**
+     * Issue a book to the member
+     * @return void
+     */
+    public function issueBook()
+    {
+        $bookNo = $_POST["bookNo"];
+        $memberId = Session::get("member")["Id"];
+        $errors = [];
+        
+        $bookExists = $this->db->query("SELECT * FROM book_master WHERE BookNo = :bookNo and Status = 'Available'", ["bookNo" => $bookNo])->fetch();
+        if(!$bookExists)
+        {
+            $errors["bookNo"] = "Book does not exist or is issued!!!";
+            load("Member/Search.member", ["errors" => $errors]);
+            exit;
+        }
+
+        $memberExists = $this->db->query("SELECT * FROM member WHERE id = :memberId", ["memberId" => $memberId])->fetch();
+        if(!$memberExists)
+        {
+            $errors["member"] = "Member does not exist !!!";
+            load("Member/Search.member", ["errors" => $errors]);
+            exit;
+        }
+        $memberEmail = $this->db->query("SELECT Email FROM member_auth WHERE MemberId = :memberId", ["memberId" => $memberId])->fetch()->Email;
+
+        $requestExists = $this->db->query("SELECT * FROM requests WHERE BookNo = :bookNo AND member_email = :member_email AND Status = 'Pending'", [
+            "bookNo" => $bookNo,
+            "member_email" => $memberEmail
+        ])->fetch();
+        if($requestExists)
+        {
+            $errors["request"] = "You have already requested this book and it is pending approval.";
+            load("Member/Search.member", ["errors" => $errors]);
+            exit;
+        }
+
+        $this->db->query("insert into requests(member_email, BookNo, Status) values(:member_email, :bookNo, :status)", [
+            "member_email" => $memberEmail,
+            "bookNo" => $bookNo,
+            "status" => "Pending"
+        ]);
+
+        EmailController::sendEmail($memberEmail, "Book Request Received", "Your book request has been received", "<h1>Your book request for Book: $bookExists->Title has been received and is pending approval.</h1>");
+        Session::setFlash("success", "Book request has been sent successfully. Please wait for approval.");
+        redirect("/member-search");
     }
 
     /**

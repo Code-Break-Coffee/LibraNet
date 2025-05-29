@@ -1,4 +1,6 @@
 <?= loadComponent("Head");
+use Framework\Session;
+$success = Session::getFlash("success");
 loadComponent("Sidebar", [
     "components" => [
         "Home" => [
@@ -38,6 +40,7 @@ loadComponent("Sidebar", [
     <main class="container mx-auto px-4 py-8 min-h-screen">
         <h1 class="text-2xl font-semibold text-l-3 dark:text-d-3 mb-6">Member Search</h1>
         <?= isset($errors) ? loadComponent("ErrorAlert", ["errors" => $errors ?? []]) : "" ?>
+        <?= isset($success) ? loadComponent("SuccessAlert", ["success" => $success ?? ""]) : "" ?>
         <form action="/member-search" method="post" class="mb-6">
             <div class="flex items-center gap-4">
                 <input

@@ -12,7 +12,6 @@ $router->get("/member-signout","MemberController@memberSignout",["auth-member"])
 //----Member Dashboard
 $router->get("/member-search","MemberController@memberSearch",["auth-member"]);
 
-
 //----Incharge
 $router->get("/incharge-dashboard","InchargeController@inchargeDashboard",["auth-incharge"]);
 $router->get("/incharge-signin","InchargeController@index",["guest-incharge"]);
@@ -43,6 +42,7 @@ $router->post("/add-member","MemberController@addMember",["guest-member"]);
 
 //----Member Dashboard
 $router->post("/member-search","MemberController@search",["auth-member"]);
+$router->post("/member-issue-book","MemberController@issueBook",["auth-member"]);
 
 //----Incharge
 $router->post("/incharge-signin","InchargeController@inchargeSignin",["guest-incharge"]);
@@ -52,6 +52,7 @@ $router->get("/incharge-signout","InchargeController@inchargeSignout",["auth-inc
 $router->post("/add-incharge","InchargeController@addIncharge",["auth-incharge"]);
 $router->post("/incharge-search","InchargeController@search",["auth-incharge"]);
 $router->post("/incharge-edit-book","BookController@editBook",["auth-incharge"]);
+
 //----Books
 $router->post("/incharge-transactions","BookController@issueBook",["auth-incharge"]);
 $router->post("/incharge-book-insert","BookController@insertBook",["auth-incharge"]);
@@ -64,7 +65,6 @@ $router->put("/incharge-ban","InchargeController@inchargeBan",["auth-incharge"])
 $router->put("/incharge-unban","InchargeController@inchargeUnban",["auth-incharge"]);
 $router->put("/incharge-change-password","InchargeController@changePassword",["auth-incharge"]);
 $router->put("/incharge-change-profile","InchargeController@updateProfile",["auth-incharge"]);
-
 
 //----Books
 $router->put("/incharge-transactions","BookController@returnBook",["auth-incharge"]);
