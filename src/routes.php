@@ -10,7 +10,8 @@ $router->get("/member-dashboard","MemberController@memberDashboard",["auth-membe
 $router->get("/member-signout","MemberController@memberSignout",["auth-member"]);
 
 //----Member Dashboard
-$router->get("/member-search","MemberController@memberSearch",["auth-member"]);
+// $router->get("/member-search","MemberController@memberSearch",["auth-member"]);
+$router->get("/member-search","MemberController@search",["auth-member"]);
 
 //----Incharge
 $router->get("/incharge-dashboard","InchargeController@inchargeDashboard",["auth-incharge"]);
@@ -66,6 +67,7 @@ $router->put("/incharge-ban","InchargeController@inchargeBan",["auth-incharge"])
 $router->put("/incharge-unban","InchargeController@inchargeUnban",["auth-incharge"]);
 $router->put("/incharge-change-password","InchargeController@changePassword",["auth-incharge"]);
 $router->put("/incharge-change-profile","InchargeController@updateProfile",["auth-incharge"]);
+$router->put("/incharge-reject","InchargeController@rejectRequest",["auth-incharge"]);
 
 //----Books
 $router->put("/incharge-transactions","BookController@returnBook",["auth-incharge"]);

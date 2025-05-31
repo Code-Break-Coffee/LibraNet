@@ -1,4 +1,6 @@
 <?php
+use Framework\Session;
+$success = Session::getFlash("issueSuccess") ?? Session::getFlash("success");
 loadComponent("Head");
 loadComponent("Sidebar", [
     "components" => [
@@ -41,6 +43,9 @@ loadComponent("Sidebar", [
             </div> -->
     <main class="container mx-auto px-4 py-8">
         <h1 class="text-2xl font-semibold text-gray-800 dark:text-gray-300 mb-6">Issue Requests</h1>
+        <?=isset($errors) ? loadComponent("ErrorAlert",["errors"=>$errors]) : "" ?>
+        <?=isset($success) ? loadComponent("SuccessAlert",["success"=>$success]) : "" ?>
+        <?=empty($requests) ? "<p class='text-gray-500 dark:text-gray-400'>No requests found.</p>" : "" ?>
         <ul class="space-y-4">
             <?php foreach ($requests as $request): ?>
                 <li class="p-4 bg-white dark:bg-[#101623] rounded-lg shadow">
@@ -65,8 +70,10 @@ loadComponent("Sidebar", [
                         </div>
                     </div>
                     <div class="flex gap-4 mt-4 ml-3">
-                        <form action="/incharge-accept" method="post">
-                            <input type="hidden" name="bookNo" value="">
+                        <form action="/incharge-transactions" method="post">
+                            <input type="hidden" name="issue_book_no" value="<?= $request->BookNo ?>">
+                            <input type="hidden" name="issue_member_email" value="<?= $request->email ?>">
+                            <input type="hidden" name="_route" value="incharge-accept">
                             <button
                                 type="submit"
                                 class="w-[135px] h-[40px] rounded-lg bg-green-600 p-2 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 dark:shadow-lg dark:shadow-d-2/30">
@@ -74,7 +81,9 @@ loadComponent("Sidebar", [
                             </button>
                         </form>
                         <form action="/incharge-reject" method="post">
-                            <input type="hidden" name="bookNo" value="">
+                            <input type="hidden" name="bookNo" value="<?= $request->BookNo ?>">
+                            <input type="hidden" name="Email" value="<?= $request->email ?>">
+                            <input type="hidden" name="_method" value="PUT">
                             <button
                                 type="submit"
                                 class="w-[135px] h-[40px] rounded-lg bg-red-600 p-2 text-white hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 dark:shadow-lg dark:shadow-d-2/30">
