@@ -15,6 +15,10 @@ loadComponent("Sidebar", [
             "url" => "/incharge-transactions",
             "icon" => "M17 9V7a4 4 0 00-8 0v2M5 10h14a1 1 0 011 1v8a1 1 0 01-1 1H5a1 1 0 01-1-1v-8a1 1 0 011-1z"
         ],
+        "Requests" => [
+            "url" => "/incharge-requests",
+            "icon" => "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+        ],
         "Profile" => [
             "url" => "/incharge-profile",
             "icon" => "M5.121 17.804A4 4 0 0112 14a4 4 0 016.879 3.804M12 14a4 4 0 100-8 4 4 0 000 8z"

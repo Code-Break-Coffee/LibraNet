@@ -628,7 +628,44 @@ class InchargeController
         load("Incharge/Dashboard.incharge.search", ["search_type" => "", "members" => [], "incharges" => [], "books" => []]);
     }
 
+    /**
+     * Incharge Issue Requests
+     * @return void
+     */
+    public function requests()
+    {
+        $limit = 5;
+        $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+        $offset = ($page - 1) * $limit;
 
+        $requests = $this->db->query("SELECT r.member_email as email,
+        r.BookNo as BookNo,b.Title as Title,b.Edition as Edition,
+        b.Author1 as Author1,b.Author2 as Author2,b.Author3 as Author3,
+        b.Remark as Remark,b.Publisher as Publisher,
+        r.Created_date as Created_date
+        FROM requests r inner join book_master b on r.BookNo = b.BookNo where r.Status = 'Pending' ORDER BY r.Created_date LIMIT $limit OFFSET $offset")->fetchAll();
+
+        if(empty($requests))
+        {
+            $totalQuery = $this->db->query("SELECT COUNT(*) as count FROM requests where Status = 'Pending'")->fetch();
+            $totalPages = ceil($totalQuery->count / $limit);
+            load("Incharge/Dashboard.incharge.requests", [
+                "requests" => [],
+                "currentPage" => $page,
+                "totalPages" => $totalPages
+            ]);
+            return;
+        }
+
+        $totalQuery = $this->db->query("SELECT COUNT(*) as count FROM requests where Status = 'Pending'")->fetch();
+        $totalPages = ceil($totalQuery->count / $limit);
+
+        load("Incharge/Dashboard.incharge.requests", [
+            "requests" => $requests,
+            "currentPage" => $page,
+            "totalPages" => $totalPages
+        ]);
+    }
 
     public function manipulation()
     {

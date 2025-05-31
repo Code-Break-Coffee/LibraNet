@@ -30,6 +30,7 @@ $router->get("/incharge-delete-book","BookController@deleteBook",["auth-incharge
 $router->get("/incharge-edit-book","BookController@editBook",["auth-incharge"]);
 $router->get("/incharge-book-insert","BookController@insertBook",["auth-incharge"]);
 $router->get("/incharge-manipulation","InchargeController@manipulation",["auth-incharge"]);
+$router->get("/incharge-requests","InchargeController@requests",["auth-incharge"]);
 
 //------------------------------------------------------------------Post Requests
 
