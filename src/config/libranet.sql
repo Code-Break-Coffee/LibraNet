@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: May 29, 2025 at 04:49 PM
+-- Generation Time: May 31, 2025 at 08:05 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.1.10
 
@@ -198,7 +198,12 @@ CREATE TABLE `requests` (
 --
 
 INSERT INTO `requests` (`id`, `member_email`, `BookNo`, `Status`, `Created_date`) VALUES
-(1, 'servera931@gmail.com', 3, 'Pending', '2025-05-29 16:33:44');
+(1, 'servera931@gmail.com', 3, 'Pending', '2025-05-29 16:33:44'),
+(3, 'servera931@gmail.com', 5, 'Pending', '2025-05-31 07:54:04'),
+(4, 'servera931@gmail.com', 6, 'Pending', '2025-05-31 08:02:42'),
+(5, 'servera931@gmail.com', 12, 'Pending', '2025-05-31 08:02:52'),
+(6, 'servera931@gmail.com', 9, 'Pending', '2025-05-31 08:03:03'),
+(7, 'servera931@gmail.com', 13, 'Pending', '2025-05-31 08:03:12');
 
 -- --------------------------------------------------------
 
@@ -324,7 +329,8 @@ ALTER TABLE `member_auth`
 -- Indexes for table `requests`
 --
 ALTER TABLE `requests`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `BookNo` (`BookNo`);
 
 --
 -- Indexes for table `transactions`
@@ -373,7 +379,7 @@ ALTER TABLE `member_auth`
 -- AUTO_INCREMENT for table `requests`
 --
 ALTER TABLE `requests`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `transactions`
@@ -402,6 +408,12 @@ ALTER TABLE `incharge_auth`
 --
 ALTER TABLE `member_auth`
   ADD CONSTRAINT `member_auth_ibfk_1` FOREIGN KEY (`MemberId`) REFERENCES `member` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `requests`
+--
+ALTER TABLE `requests`
+  ADD CONSTRAINT `requests_ibfk_1` FOREIGN KEY (`BookNo`) REFERENCES `book_master` (`BookNo`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Constraints for table `transactions`
