@@ -667,6 +667,36 @@ class InchargeController
         ]);
     }
 
+    /**
+     * Incharge Reject Request
+     * @return void
+     */
+    public function rejectRequest()
+    {
+        $bookNo = $_POST["bookNo"];
+        $email = $_POST["Email"];
+        $errors = [];
+
+        $request = $this->db->query("SELECT * from requests where BookNo = :bookNo and member_email = :email and Status = 'Pending'", ["bookNo" => $bookNo, "email" => $email])->fetch();
+        if (!$request) {
+            $errors["request"] = "Request doesn't exist !!!";
+            load("Incharge/Dashboard.incharge.requests", ["errors" => $errors]);
+            exit;
+        }
+
+        $this->db->query("UPDATE requests set Status = 'Rejected' where BookNo = :bookNo and member_email = :email", ["bookNo" => $bookNo, "email" => $email]);
+        Session::setFlash("success", "Request Rejected Successfully !!!");
+        EmailController::sendEmail(
+            $email,
+            "Request Rejected", 
+            "Your request for the book has been rejected.",
+            "<h1>
+            Your request for the book has been rejected for some reason.
+            <br>Kindly request for the book again after some time.
+            </h1>");
+        redirect("/incharge-requests");
+    }
+
     public function manipulation()
     {
         load("Incharge/Dashboard.incharge.bookManipulation");

@@ -1,5 +1,7 @@
 <?= loadComponent("Head");
+
 use Framework\Session;
+
 $success = Session::getFlash("success");
 loadComponent("Sidebar", [
     "components" => [
@@ -47,6 +49,7 @@ loadComponent("Sidebar", [
                     type="text"
                     name="search_query"
                     placeholder="Search any book..."
+                    value="<?= htmlspecialchars($search_query ?? '') ?>"
                     class="flex-1 rounded-lg border border-l-b-1 p-3 focus:border-l-b-1 focus:outline-none focus:ring-1 focus:ring-l-b-1 dark:border-d-2 dark:bg-l-6 dark:text-d-1 bg-l-5"
                     required>
                 <button
@@ -91,6 +94,23 @@ loadComponent("Sidebar", [
             <?php elseif (isset($searchResults) && empty($searchResults)): ?>
                 <p class="text-black dark:text-gray-300 bg-white dark:bg-[#101623] rounded-lg p-4 shadow">No results found.</p>
             <?php endif; ?>
+            <div class="flex justify-center mt-4 space-x-4">
+                <?php if (($currentPage ?? 1) > 1): ?>
+                    <a href="?page=<?= $currentPage - 1 ?>&search_query=<?= urlencode($search_query ?? '') ?>" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Previous
+                    </a>
+                <?php endif; ?>
+
+                <span class="px-4 py-2 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-white rounded">
+                    Page <?= $currentPage ?? 1 ?> of <?= $totalPages ?? 1 ?>
+                </span>
+
+                <?php if (($currentPage ?? 1) < ($totalPages ?? 1)): ?>
+                    <a href="?page=<?= $currentPage + 1 ?>&search_query=<?= urlencode($search_query ?? '') ?>" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Next
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
     </main>
 </div>
