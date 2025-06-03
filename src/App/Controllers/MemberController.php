@@ -253,7 +253,72 @@ class MemberController
      */
     public function memberDashboard()
     {
-        load("Member/Dashboard.member");
+        $popularBooks = $this->db->query("
+            SELECT 
+            book_master.BookNo,
+            book_master.Title,
+            book_master.Author1,
+            book_master.Author2,
+            book_master.Author3,
+            book_master.Publisher,
+            COUNT(transactions.BookNo) as count
+            FROM book_master
+            INNER JOIN transactions ON book_master.BookNo = transactions.BookNo
+            GROUP BY 
+            book_master.BookNo,
+            book_master.Title,
+            book_master.Author1,
+            book_master.Author2,
+            book_master.Author3,
+            book_master.Publisher
+            ORDER BY count DESC
+            LIMIT 5
+        ")->fetchAll();
+        
+        $borrowerId = Session::get("member")["Id"];
+
+        $recentTransactionBooks = $this->db->query("SELECT *,transactions.ReturnDate,transactions.BorrowDate from book_master inner join 
+        transactions on book_master.BookNo = transactions.BookNo where BorrowerId=$borrowerId order by transactions.BorrowDate desc limit 5")->fetchAll();
+        $checkoutsOfEachBookForThisMonth = $this->db->query("
+            SELECT BookNo, COUNT(*) as count 
+            FROM transactions 
+            WHERE MONTH(BorrowDate) = MONTH(CURRENT_DATE()) 
+            AND YEAR(BorrowDate) = YEAR(CURRENT_DATE()) 
+            AND BorrowerId = $borrowerId 
+            GROUP BY BookNo
+        ")->fetchAll();
+
+
+        $number_of_books_issued=$this->db->query("SELECT COUNT(*) from transactions where BorrowerId=$borrowerId")->fetchColumn();
+        $number_of_books_due=$this->db->query("SELECT COUNT(*) from transactions where BorrowerId=$borrowerId and ReturnDate is NULL")->fetchColumn();
+        $favorite_book = $this->db->query("
+            SELECT b.Title
+            FROM transactions AS t
+            INNER JOIN book_master AS b ON t.BookNo = b.BookNo
+            WHERE t.BorrowerId = $borrowerId
+            GROUP BY b.Title
+            ORDER BY COUNT(*) DESC
+            LIMIT 1
+        ")->fetchColumn();
+        $monthlyCheckouts = [];
+        foreach ($checkoutsOfEachBookForThisMonth as $checkout) {
+            $monthlyCheckouts[$checkout->BookNo] = $checkout->count;
+        }
+
+        foreach ($popularBooks as &$book) {
+            $book->monthly_checkouts = $monthlyCheckouts[$book->BookNo] ?? 0;
+        }
+
+
+        load("Member/Dashboard.member",[
+            "memberID"=>$borrowerId,
+            "number_of_books_issued"=>$number_of_books_issued,
+            "number_of_books_due"=>$number_of_books_due,
+            "favorite_book"=>$favorite_book,
+            "popularBooks"=>$popularBooks,
+            "recentTransactionBooks" => $recentTransactionBooks,
+
+        ]);
     }
 
 
